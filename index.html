@@ -25,7 +25,7 @@
       --text: #1e293b;
       --text-muted: #64748b;
       --border: #e2e8f0;
-      --sidebar-width: 280px;
+      --sidebar-width: 300px;
       --transition: 0.25s ease;
     }
 
@@ -997,18 +997,141 @@
     }
 
 
-    .semester-select {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      font-family: inherit;
-      margin-bottom: 0.5rem;
+    .subject-nav li.sem-picker-wrap {
+      padding: 0.65rem 1rem 0.5rem;
+      position: relative;
+      z-index: 60;
     }
 
-    .sem-picker-label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 0.25rem; }
+    .sem-picker-label {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .sem-dropdown { position: relative; margin-bottom: 0.5rem; }
+
+    .sem-dropdown-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .sem-dropdown-trigger:hover,
+    .sem-dropdown.open .sem-dropdown-trigger {
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(59,130,246,0.55);
+    }
+
+    .sem-dropdown-chevron {
+      font-size: 0.65rem;
+      opacity: 0.7;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .sem-dropdown.open .sem-dropdown-chevron { transform: rotate(180deg); }
+
+    .sem-dropdown-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0.35rem;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 6px);
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 200;
+      display: none;
+    }
+
+    .sem-dropdown.open .sem-dropdown-menu { display: block; }
+
+    .sem-dropdown-menu li button {
+      width: 100%;
+      padding: 0.5rem 0.65rem;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.78rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sem-dropdown-menu li button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    .sem-dropdown-menu li button.active {
+      background: rgba(59,130,246,0.25);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .subject-nav li.sem-overview-item { padding: 0 1rem 0.65rem; }
+
+    .student-benefits {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .student-benefits h3 {
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .benefit-chip {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      background: rgba(255,255,255,0.85);
+      border-radius: 10px;
+      padding: 0.55rem 0.65rem;
+      line-height: 1.35;
+    }
+
+    .benefit-chip span:first-child { font-size: 1.1rem; flex-shrink: 0; }
+
+    [data-theme="dark"] .student-benefits {
+      background: linear-gradient(135deg, #1e3a5f33 0%, #14532d33 100%);
+    }
+
+    [data-theme="dark"] .benefit-chip { background: rgba(30,41,59,0.9); }
 
     .btn-back-sem {
       display: inline-flex;
@@ -1028,16 +1151,19 @@
 
     .sem-overview-btn {
       width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 0.75rem;
-      background: rgba(59,130,246,0.25);
-      border: 1px solid rgba(59,130,246,0.5);
+      padding: 0.55rem 0.75rem;
+      background: rgba(59,130,246,0.22);
+      border: 1px solid rgba(59,130,246,0.45);
       color: #fff;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-family: inherit;
       font-size: 0.8rem;
+      font-weight: 500;
+      transition: background 0.2s;
     }
+
+    .sem-overview-btn:hover { background: rgba(59,130,246,0.35); }
 
     .sem-tip { color: var(--text-muted); margin: 0.5rem 0 1rem; font-size: 0.9rem; }
 
@@ -1151,23 +1277,62 @@
     .sidebar-smart .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
     #smartHubPanel { display: none; }
-    #smartHubPanel.active { display: block; }
+    #smartHubPanel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .smart-hub-shell { max-width: 1100px; }
+
+    .smart-hub-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .smart-hub-head p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      max-width: 36rem;
+    }
 
     .hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.15rem;
     }
 
     .hub-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
+      border-radius: 14px;
+      padding: 1.15rem 1.2rem;
       font-size: 0.85rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
     }
 
-    .hub-card h4 { font-family: 'Outfit', sans-serif; color: var(--navy); margin-bottom: 0.5rem; }
+    .hub-card h4 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--navy);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .hub-card .hub-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+
+    .hub-card .hub-actions .btn { font-size: 0.78rem; padding: 0.4rem 0.65rem; }
 
     .marks-row {
       display: flex;
@@ -1474,6 +1639,49 @@
       closeSidebar();
     }
 
+    function renderStudentBenefits() {
+      return `
+        <div class="student-benefits">
+          <h3>🎓 Students ko kya faida?</h3>
+          <div class="benefits-grid">
+            <div class="benefit-chip"><span>📊</span> Poori 8-semester degree ka progress — confuse nahi honge</div>
+            <div class="benefit-chip"><span>✅</span> Topic tick karo — kya parha, kya baqi, clear dikhe</div>
+            <div class="benefit-chip"><span>📋</span> Mock paper + timer — exam hall jaisi practice</div>
+            <div class="benefit-chip"><span>🔗</span> YouTube + free PDF — har topic ke resources ek jagah</div>
+            <div class="benefit-chip"><span>📁</span> Past paper log — kaunsa topic bar bar aata hai</div>
+            <div class="benefit-chip"><span>⚡</span> Smart Hub — weekly plan, marks, backup, WhatsApp share</div>
+          </div>
+        </div>`;
+    }
+
+    function bindSemDropdown() {
+      const wrap = document.getElementById('semDropdown');
+      if (!wrap) return;
+      const trigger = document.getElementById('semDropdownTrigger');
+      trigger.onclick = e => {
+        e.stopPropagation();
+        const open = wrap.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+      wrap.querySelectorAll('[data-sem]').forEach(btn => {
+        btn.onclick = e => {
+          e.stopPropagation();
+          switchSemester(btn.dataset.sem);
+        };
+      });
+    }
+
+    if (!window._semDropdownDocBound) {
+      window._semDropdownDocBound = true;
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.sem-dropdown.open').forEach(d => {
+          d.classList.remove('open');
+          const t = d.querySelector('.sem-dropdown-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
     function renderSemesterDashboard() {
       viewMode = 'semester';
       const sem = getSemester(activeSemesterId);
@@ -1489,6 +1697,7 @@
           <span>${total} Topics</span>
           <span class="countdown-badge">${pct}% this semester</span>
         </div>
+        ${renderStudentBenefits()}
         <div class="paper-clear-steps">
           <h3>📋 Paper clear roadmap — is semester ke liye</h3>
           <ol>
@@ -2320,12 +2529,20 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
 
     function renderSidebar() {
       const nav = document.getElementById('subjectNav');
-      let html = '<li class="sem-picker-wrap"><label class="sem-picker-label">My semester</label><select id="semesterSelect" class="semester-select">';
+      const currentSem = getSemester(activeSemesterId);
+      let html = `<li class="sem-picker-wrap">
+        <label class="sem-picker-label" for="semDropdownTrigger">My semester</label>
+        <div class="sem-dropdown" id="semDropdown">
+          <button type="button" class="sem-dropdown-trigger" id="semDropdownTrigger" aria-expanded="false" aria-haspopup="listbox">
+            <span>${escapeHtml(currentSem.label)}</span>
+            <span class="sem-dropdown-chevron" aria-hidden="true">▼</span>
+          </button>
+          <ul class="sem-dropdown-menu" role="listbox">`;
       BBA_PROGRAM.semesters.forEach(s => {
-        html += `<option value="${s.id}" ${s.id === activeSemesterId ? 'selected' : ''}>${s.label}</option>`;
+        html += `<li><button type="button" role="option" data-sem="${s.id}" class="${s.id === activeSemesterId ? 'active' : ''}">${escapeHtml(s.label)}</button></li>`;
       });
-      html += '</select></li>';
-      html += '<li><button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button></li>';
+      html += `</ul></div></li>
+        <li class="sem-overview-item"><button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button></li>`;
       html += SUBJECTS.map(s => {
         const semPct = getSubjectPct(s);
         return `<li><button type="button" data-subject="${s.id}" class="${s.id === activeSubjectId && viewMode === 'course' ? 'active' : ''}">
@@ -2337,7 +2554,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       }).join('');
 
       nav.innerHTML = html;
-      document.getElementById('semesterSelect').onchange = e => switchSemester(e.target.value);
+      bindSemDropdown();
       document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
       nav.querySelectorAll('[data-subject]').forEach(btn => {
         btn.addEventListener('click', () => { viewMode = 'course'; switchSubject(btn.dataset.subject); closeSidebar(); });
@@ -2554,6 +2771,8 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       get progress() { return progress; },
       get activeSubjectId() { return activeSubjectId; },
       set activeSubjectId(v) { activeSubjectId = v; },
+      get viewMode() { return viewMode; },
+      renderSemesterDashboard,
       isDone,
       toggleTopic,
       saveProgress,

@@ -432,35 +432,60 @@
       main.style.display = 'none';
       panel.style.display = 'block';
       panel.innerHTML = `
-        <h2 class="font-heading" style="font-size:1.5rem;color:var(--navy);margin-bottom:1rem">⚡ Smart Hub</h2>
-        <div id="compareResult" style="display:none;padding:0.75rem;background:#eff6ff;border-radius:8px;margin-bottom:1rem"></div>
-        <div class="hub-grid">
-          <div class="hub-card"><h4>📅 Weekly plan</h4>${buildWeeklyPlan()}</div>
-          <div class="hub-card"><h4>🎯 Guess paper 2026</h4><p>${GUESS_IDS.length} high-probability topics</p>
-            <button type="button" class="btn btn-primary" id="hubGuess">View list</button></div>
-          <div class="hub-card"><h4>📊 Exam marks log</h4>
-            ${A().SUBJECTS.map(s => {
-              const m = smart.marks[s.id] || {};
-              return `<div class="marks-row"><span>${s.code}</span>
-                Mid <input type="number" data-mid="${s.id}" value="${m.mid ?? ''}" placeholder="—" min="0" max="100">
-                Final <input type="number" data-fin="${s.id}" value="${m.final ?? ''}" placeholder="—" min="0" max="100"></div>`;
-            }).join('')}
-            <button type="button" class="btn" id="hubSaveMarks">Save marks</button></div>
-          <div class="hub-card"><h4>💾 Backup & share</h4>
-            <button type="button" class="btn" id="hubExport">Export JSON</button>
-            <button type="button" class="btn" id="hubImport">Import JSON</button>
-            <input type="file" id="hubImportFile" accept=".json" hidden>
-            <button type="button" class="btn" id="hubWhatsApp">WhatsApp share</button>
-            <button type="button" class="btn" id="hubCompare">Compare link</button></div>
-          <div class="hub-card"><h4>🍅 Pomodoro</h4>
-            <p>Work ${smart.pomodoro.work}m / Break ${smart.pomodoro.break}m</p>
-            <button type="button" class="btn btn-primary" id="hubPomodoro">Start</button></div>
-          <div class="hub-card"><h4>🔔 Notifications</h4>
-            <button type="button" class="btn" id="hubNotify">Check exam reminders</button></div>
-          <div class="hub-card"><h4>📁 Past papers search</h4>
-            ${A().SUBJECTS.map(s => `<a class="btn" href="${PAST_PAPER_LINKS[s.id]}" target="_blank" rel="noopener">${s.code} papers</a> `).join('')}</div>
+        <div class="smart-hub-shell">
+          <div class="smart-hub-head">
+            <div>
+              <h2 class="font-heading" style="font-size:1.5rem;color:var(--navy);margin:0">⚡ Smart Hub</h2>
+              <p>Exam planning, marks, backup — sab ek jagah. Neeche har tool ka short faida likha hai.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="hubClose">← Dashboard</button>
+          </div>
+          <div id="compareResult" style="display:none;padding:0.75rem;background:#eff6ff;border-radius:8px;margin-bottom:1rem"></div>
+          <div class="hub-grid">
+            <div class="hub-card"><h4>📅 Weekly plan</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Baqi topics ÷ din — roz kitna parhna hai, auto suggest.</p>
+              ${buildWeeklyPlan()}
+            </div>
+            <div class="hub-card"><h4>🎯 Guess paper 2026</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">${GUESS_IDS.length} topics jo aksar paper / quiz mein aate hain.</p>
+              <div class="hub-actions"><button type="button" class="btn btn-primary" id="hubGuess">View list</button></div>
+            </div>
+            <div class="hub-card"><h4>📊 Exam marks log</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Mid / Final marks save — weak subject identify karo.</p>
+              ${A().SUBJECTS.map(s => {
+                const m = smart.marks[s.id] || {};
+                return `<div class="marks-row"><span>${s.code}</span>
+                  Mid <input type="number" data-mid="${s.id}" value="${m.mid ?? ''}" placeholder="—" min="0" max="100">
+                  Final <input type="number" data-fin="${s.id}" value="${m.final ?? ''}" placeholder="—" min="0" max="100"></div>`;
+              }).join('')}
+              <div class="hub-actions"><button type="button" class="btn btn-primary" id="hubSaveMarks">Save marks</button></div>
+            </div>
+            <div class="hub-card"><h4>💾 Backup & share</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Phone change? JSON export. Dosto se progress compare.</p>
+              <div class="hub-actions">
+                <button type="button" class="btn" id="hubExport">Export JSON</button>
+                <button type="button" class="btn" id="hubImport">Import JSON</button>
+                <input type="file" id="hubImportFile" accept=".json" hidden>
+                <button type="button" class="btn" id="hubWhatsApp">WhatsApp</button>
+                <button type="button" class="btn" id="hubCompare">Compare</button>
+              </div>
+            </div>
+            <div class="hub-card"><h4>🍅 Pomodoro</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Focus blocks — ${smart.pomodoro.work}m study, ${smart.pomodoro.break}m break.</p>
+              <div class="hub-actions"><button type="button" class="btn btn-primary" id="hubPomodoro">Start</button></div>
+            </div>
+            <div class="hub-card"><h4>🔔 Notifications</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Exam date ke qareeb reminder (browser allow karein).</p>
+              <div class="hub-actions"><button type="button" class="btn" id="hubNotify">Check reminders</button></div>
+            </div>
+            <div class="hub-card"><h4>📁 Past papers search</h4>
+              <p style="color:var(--text-muted);font-size:0.8rem">Google par KU past papers — har subject ek click.</p>
+              <div class="hub-actions">
+                ${A().SUBJECTS.map(s => `<a class="btn" href="${PAST_PAPER_LINKS[s.id] || '#'}" target="_blank" rel="noopener">${s.code}</a>`).join('')}
+              </div>
+            </div>
+          </div>
         </div>
-        <button type="button" class="btn btn-primary" id="hubClose" style="margin-top:1rem">← Back to subjects</button>
       `;
       document.getElementById('hubGuess').onclick = openGuessPaper;
       document.getElementById('hubExport').onclick = exportAllData;
@@ -481,7 +506,13 @@
         saveSmart();
         A().showToast('Marks saved');
       };
-      document.getElementById('hubClose').onclick = () => { panel.classList.remove('active'); main.style.display = ''; };
+      document.getElementById('hubClose').onclick = () => {
+        panel.classList.remove('active');
+        panel.style.display = 'none';
+        main.style.display = '';
+        if (A().viewMode === 'semester') A().renderSemesterDashboard();
+        else A().renderSubject(A().activeSubjectId, false);
+      };
       parseCompareHash();
     } else {
       main.style.display = '';
