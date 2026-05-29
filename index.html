@@ -294,6 +294,41 @@
       border: 1px solid var(--border);
     }
 
+    .free-books {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .free-books h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .free-books p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .free-books .btn { margin-right: 0.5rem; margin-bottom: 0.35rem; }
+
+    .btn-free {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #047857;
+    }
+
+    .btn-free:hover {
+      background: #d1fae5;
+      border-color: #34d399;
+      color: #065f46;
+    }
+
     .stats-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -606,6 +641,80 @@
 
     const TYPE_MAP = { theory: 'concept', calculation: 'calculation', writing: 'writing' };
 
+    const FREE_BOOKS = {
+      fa: {
+        title: 'Principles of Financial Accounting (OpenStax)',
+        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Principles_of_Accounting_Volume_1_Financial_Accounting-WEB.pdf',
+        web: 'https://openstax.org/books/principles-financial-accounting/pages/1-why-it-matters'
+      },
+      math: {
+        title: 'Business Math: Step-by-Step Handbook (Free)',
+        pdf: 'https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/340/11/Business-Math-A-Step-by-Step-Handbook-1622204522.pdf',
+        web: 'https://open.umn.edu/opentextbooks/textbooks/business-math-a-step-by-step-handbook'
+      },
+      econ: {
+        title: 'Principles of Microeconomics 3e (OpenStax)',
+        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Microeconomics3e-WEB.pdf',
+        web: 'https://openstax.org/books/principles-microeconomics-3e/pages/1-introduction'
+      },
+      mgt: {
+        title: 'Principles of Management (OpenStax)',
+        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/PrinciplesofManagement-OP_mGBMvoU.pdf',
+        web: 'https://openstax.org/books/principles-management/pages/1-introduction'
+      },
+      mkt: {
+        title: 'Principles of Marketing (OpenStax)',
+        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Principles_Marketing-WEB.pdf',
+        web: 'https://openstax.org/books/principles-marketing/pages/1-introduction'
+      },
+      comm: {
+        title: 'Business Communication for Success (Free PDF)',
+        pdf: 'https://2012books.lardbucket.org/pdfs/communication-for-business-success.pdf',
+        web: 'https://open.umn.edu/opentextbooks/textbooks/8'
+      }
+    };
+
+    const FREE_TOPIC_PDF = {
+      'fa-1': 'https://openstax.org/books/principles-financial-accounting/pages/1-why-it-matters',
+      'fa-2': 'https://openstax.org/books/principles-financial-accounting/pages/14-introduction-to-financial-statement-analysis',
+      'fa-4': 'https://openstax.org/books/principles-financial-accounting/pages/3-introduction',
+      'fa-5': 'https://openstax.org/books/principles-financial-accounting/pages/2-3-prepare-an-income-statement-statement-of-owners-equity-and-balance-sheet',
+      'fa-6': 'https://openstax.org/books/principles-financial-accounting/pages/2-1-describe-the-income-statement-statement-of-owners-equity-balance-sheet-and-statement-of-cash-flows-and-how-they-interrelate',
+      'fa-7': 'https://openstax.org/books/principles-financial-accounting/pages/16-1-explain-the-purpose-of-the-statement-of-cash-flows',
+      'fa-8': 'https://openstax.org/books/principles-financial-accounting/pages/10-introduction',
+      'fa-10': 'https://openstax.org/books/principles-financial-accounting/pages/15-introduction',
+      'math-2': 'https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/340/11/Business-Math-A-Step-by-Step-Handbook-1622204522.pdf',
+      'math-3': 'https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/340/11/Business-Math-A-Step-by-Step-Handbook-1622204522.pdf',
+      'math-4': 'https://ecampusontario.pressbooks.pub/businesmath2023/chapter/5-2-break-even-analysis/',
+      'math-6': 'https://openstax.org/books/precalculus-2e/pages/11-5-matrices-and-matrix-operations',
+      'math-8': 'https://ecampusontario.pressbooks.pub/mathematicsfinance/chapter/1-0-introduction/',
+      'math-9': 'https://ecampusontario.pressbooks.pub/mathematicsfinance/chapter/2-0-introduction/',
+      'econ-1': 'https://openstax.org/books/principles-microeconomics-3e/pages/3-1-demand-supply-and-equilibrium-in-markets-for-goods-and-services',
+      'econ-2': 'https://openstax.org/books/principles-microeconomics-3e/pages/5-1-price-elasticity-of-demand-and-price-elasticity-of-supply',
+      'econ-5': 'https://openstax.org/books/principles-microeconomics-3e/pages/7-introduction-to-production-costs-and-industry-structure',
+      'econ-6': 'https://openstax.org/books/principles-microeconomics-3e/pages/8-introduction-to-perfect-competition',
+      'econ-7': 'https://openstax.org/books/principles-microeconomics-3e/pages/9-introduction-to-a-monopoly',
+      'econ-8': 'https://openstax.org/books/principles-microeconomics-3e/pages/10-introduction-to-monopolistic-competition-and-oligopoly',
+      'mgt-3': 'https://openstax.org/books/principles-management/pages/9-introduction',
+      'mgt-4': 'https://openstax.org/books/principles-management/pages/12-introduction',
+      'mgt-5': 'https://openstax.org/books/principles-management/pages/15-introduction',
+      'mgt-6': 'https://openstax.org/books/principles-management/pages/18-introduction',
+      'mkt-1': 'https://openstax.org/books/principles-marketing/pages/1-introduction',
+      'mkt-4': 'https://openstax.org/books/principles-marketing/pages/4-introduction',
+      'mkt-5': 'https://openstax.org/books/principles-marketing/pages/5-introduction',
+      'mkt-6': 'https://openstax.org/books/principles-marketing/pages/6-introduction',
+      'mkt-7': 'https://openstax.org/books/principles-marketing/pages/7-introduction',
+      'mkt-8': 'https://openstax.org/books/principles-marketing/pages/9-introduction',
+      'comm-2': 'https://2012books.lardbucket.org/books/communication-for-business-success/s04-effective-business-writing.html',
+      'comm-3': 'https://2012books.lardbucket.org/books/communication-for-business-success/s09-04-report.html',
+      'comm-4': 'https://2012books.lardbucket.org/books/communication-for-business-success/s09-02-memorandums-and-letters.html',
+      'comm-7': 'https://2012books.lardbucket.org/books/communication-for-business-success/s09-05-r-sum.html'
+    };
+
+    function isFreePdfUrl(url) {
+      return /openstax\.org|assets\.openstax\.org|lardbucket\.org|ecampusontario|pressbooks\.pub|openlibrary-repo|open\.umn\.edu/i.test(url);
+    }
+
     const SUBJECTS = [
       {
         id: 'fa',
@@ -819,6 +928,13 @@
       }
     ];
 
+    SUBJECTS.forEach(s => {
+      s.freeBook = FREE_BOOKS[s.id];
+      s.topics.forEach(t => {
+        if (FREE_TOPIC_PDF[t.id]) t.pdf = FREE_TOPIC_PDF[t.id];
+      });
+    });
+
     let progress = loadProgress();
     let activeSubjectId = SUBJECTS[0].id;
 
@@ -937,6 +1053,9 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       const tags = [];
       if (topic.important) tags.push('<span class="tag tag-important">★ exam important</span>');
       tags.push(`<span class="tag tag-type">${typeLabel}</span>`);
+      const freePdf = isFreePdfUrl(topic.pdf);
+      const pdfBtnClass = freePdf ? 'btn btn-pdf btn-free' : 'btn btn-pdf';
+      const pdfLabel = freePdf ? '📄 Free PDF' : '📄 PDF Notes';
 
       return `
         <article class="topic-card ${done ? 'done' : ''}" data-topic="${topic.id}">
@@ -947,7 +1066,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
             <div class="topic-tags">${tags.join('')}</div>
             <div class="topic-actions">
               <a class="btn btn-yt" href="${topic.yt}" target="_blank" rel="noopener">▶ YouTube</a>
-              <a class="btn btn-pdf" href="${topic.pdf}" target="_blank" rel="noopener">📄 PDF Notes</a>
+              <a class="${pdfBtnClass}" href="${topic.pdf}" target="_blank" rel="noopener">${pdfLabel}</a>
             </div>
           </div>
         </article>
@@ -961,6 +1080,16 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       const content = document.getElementById('contentArea');
 
       const doRender = () => {
+        const fb = subject.freeBook;
+        const freeBookHtml = fb ? `
+          <div class="free-books">
+            <h3>📚 Free textbook — poora subject</h3>
+            <p>100% free, legal (OpenStax / Open Textbook). ★ important topics ke neeche chapter links bhi free hain.</p>
+            <a class="btn btn-free" href="${fb.pdf}" target="_blank" rel="noopener">📥 Full book PDF</a>
+            <a class="btn" href="${fb.web}" target="_blank" rel="noopener">🌐 Read online</a>
+          </div>
+        ` : '';
+
         document.getElementById('subjectHeader').innerHTML = `
           <h2>${escapeHtml(subject.name)}</h2>
           <div class="subject-meta">
@@ -968,6 +1097,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
             <span>${subject.credits} Credit Hours</span>
             <span>Code: ${subject.code}</span>
           </div>
+          ${freeBookHtml}
         `;
 
         const total = subject.topics.length;
