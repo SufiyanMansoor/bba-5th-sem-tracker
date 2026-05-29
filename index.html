@@ -785,6 +785,151 @@
       color: var(--text-muted);
     }
 
+    .exam-timer-bar {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      z-index: 350;
+      background: var(--navy);
+      color: #fff;
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .exam-timer-bar.hidden { display: none; }
+
+    .exam-timer-bar .timer-display {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      min-width: 5ch;
+    }
+
+    .exam-timer-bar.warning .timer-display { color: #fbbf24; }
+    .exam-timer-bar.critical .timer-display { color: #f87171; animation: pulse 1s infinite; }
+
+    @keyframes pulse {
+      50% { opacity: 0.7; }
+    }
+
+    .exam-timer-bar .timer-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .exam-timer-bar .btn {
+      color: #fff;
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .exam-timer-bar .btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    body.exam-active .main { padding-top: 4rem; }
+
+    .flashcard-wrap { text-align: center; }
+
+    .flashcard-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+
+    .flashcard-filters label {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+    }
+
+    .flashcard {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 420px;
+      height: 220px;
+      margin: 0 auto 1rem;
+      cursor: pointer;
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s ease;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+    .flashcard-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border);
+      background: var(--bg);
+    }
+
+    .flashcard-face.back {
+      transform: rotateY(180deg);
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .flashcard-face .fc-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .flashcard-face .fc-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .flashcard-face.back .fc-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    .flashcard-progress {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .flashcard-nav {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     @media print {
       body * { visibility: hidden; }
       .modal-overlay.open,
@@ -823,6 +968,8 @@
       .stats-row {
         grid-template-columns: 1fr;
       }
+
+      .exam-timer-bar { left: 0; }
     }
   </style>
 </head>
@@ -867,6 +1014,13 @@
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <div class="exam-timer-bar hidden" id="examTimerBar" aria-live="polite">
+    <span class="timer-label">Exam mode · 3 hours</span>
+    <span class="timer-display" id="timerDisplay">90:00</span>
+    <button type="button" class="btn" id="timerPause">Pause</button>
+    <button type="button" class="btn" id="timerStop">End exam</button>
+  </div>
 
   <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="modalTitle">
@@ -1233,11 +1387,54 @@
       `
     };
 
+    const FLASHCARD_HINTS = {
+      'fa-1': 'IAS sets global accounting standards; financial statements must be comparable, relevant, reliable.',
+      'fa-2': 'Framework: objectives → qualitative characteristics → elements → recognition → measurement.',
+      'fa-4': 'IFRS used internationally; US GAAP used in USA; main differences in inventory, leases, development costs.',
+      'fa-5': 'Income statement shows revenues minus expenses = net income for a period (accrual basis).',
+      'fa-6': 'Balance sheet: Assets = Liabilities + Equity at a point in time.',
+      'fa-7': 'Operating + Investing + Financing activities; indirect starts from net income.',
+      'fa-8': 'FIFO → lower COGS in inflation; LIFO → higher COGS; weighted average smooths cost.',
+      'fa-10': 'EPS = earnings available to common shareholders ÷ weighted average shares; dividends reduce retained earnings.',
+      'math-2': 'Arithmetic sequence: constant difference. Geometric: constant ratio. Sum formulas for both.',
+      'math-3': 'Solve simultaneous equations by substitution or elimination; check solution in both equations.',
+      'math-4': 'Break-even: fixed costs ÷ contribution margin per unit; CM = price − variable cost.',
+      'math-6': 'Matrix multiply: row × column; determinant zero → no unique solution.',
+      'math-8': 'Simple: I = Prt. Compound: A = P(1+i)ⁿ — interest on interest.',
+      'math-9': 'Ordinary annuity: payments at end of period; due: at beginning. PV & FV annuity formulas.',
+      'econ-1': 'Demand ↓ when price ↑; supply ↑ when price ↑; equilibrium where Qd = Qs.',
+      'econ-2': '|E| > 1 elastic; < 1 inelastic. Income elasticity: normal vs inferior goods.',
+      'econ-5': 'SR: diminishing returns; LR: economies of scale; MC crosses AVC and ATC at minimums.',
+      'econ-6': 'Price taker; P = MR; long-run economic profit = 0.',
+      'econ-7': 'Single seller; MR < P; profit max where MR = MC; can earn long-run profit.',
+      'econ-8': 'Monopolistic comp: differentiated products; Oligopoly: few firms, interdependence.',
+      'mgt-3': 'Planning: vision, mission, goals, strategies. Types: strategic, tactical, operational.',
+      'mgt-4': 'Organizing: division of work, departmentalization, span of control, delegation.',
+      'mgt-5': 'Theories: trait, behavioral, contingency, transformational, path-goal, situational leadership.',
+      'mgt-6': 'Maslow hierarchy; Herzberg two-factor; Vroom expectancy; McClelland needs; equity theory.',
+      'mkt-1': 'Production, product, selling, marketing, societal marketing concepts.',
+      'mkt-4': 'Buyer passes need recognition → search → evaluation → purchase → post-purchase.',
+      'mkt-5': 'Segment market → choose target → position product in customer mind (STP).',
+      'mkt-6': 'Product levels: core, actual, augmented; branding builds identity and loyalty.',
+      'mkt-7': 'PLC: introduction, growth, maturity, decline — different strategies each stage.',
+      'mkt-8': 'Pricing: cost-based, value-based, competition-based; skimming vs penetration.',
+      'comm-2': '7 Cs or writing process: plan, organize, write, revise; clarity, conciseness, courtesy.',
+      'comm-3': 'Report: title, executive summary, intro, body, conclusion, recommendations, appendix.',
+      'comm-4': 'Memo: TO, FROM, DATE, SUBJECT; short internal message; clear purpose first.',
+      'comm-7': 'Resume: contact, objective, education, experience, skills; letter tailored to job.'
+    };
+
+    const EXAM_DURATION_SEC = 90 * 60;
+
     let progress = loadProgress();
     let pastPapers = loadPastPapers();
     let examDates = loadExamDates();
     let activeSubjectId = SUBJECTS[0].id;
     let modalTopicId = null;
+    let timerSecondsLeft = 0;
+    let timerInterval = null;
+    let timerPaused = false;
+    let flashcardState = { cards: [], index: 0, flipped: false };
 
     function loadProgress() {
       try {
@@ -1514,6 +1711,203 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
       });
     }
 
+    function formatTimer(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+      const bar = document.getElementById('examTimerBar');
+      const el = document.getElementById('timerDisplay');
+      el.textContent = formatTimer(timerSecondsLeft);
+      bar.classList.remove('warning', 'critical');
+      if (timerSecondsLeft <= 600) bar.classList.add('critical');
+      else if (timerSecondsLeft <= 1800) bar.classList.add('warning');
+    }
+
+    function stopExamTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerPaused = false;
+      document.getElementById('examTimerBar').classList.add('hidden');
+      document.body.classList.remove('exam-active');
+      document.getElementById('timerPause').textContent = 'Pause';
+    }
+
+    function startExamTimer() {
+      stopExamTimer();
+      timerSecondsLeft = EXAM_DURATION_SEC;
+      timerPaused = false;
+      document.getElementById('examTimerBar').classList.remove('hidden');
+      document.body.classList.add('exam-active');
+      updateTimerDisplay();
+      document.getElementById('timerPause').textContent = 'Pause';
+      timerInterval = setInterval(() => {
+        if (timerPaused) return;
+        timerSecondsLeft--;
+        updateTimerDisplay();
+        if (timerSecondsLeft <= 0) {
+          stopExamTimer();
+          showToast("Time's up! Exam finished.");
+          try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.frequency.value = 440;
+            g.gain.value = 0.1;
+            o.start();
+            setTimeout(() => o.stop(), 400);
+          } catch (_) {}
+        }
+      }, 1000);
+    }
+
+    function toggleTimerPause() {
+      if (!timerInterval && timerSecondsLeft <= 0) return;
+      timerPaused = !timerPaused;
+      document.getElementById('timerPause').textContent = timerPaused ? 'Resume' : 'Pause';
+    }
+
+    function openTimedExam(subject) {
+      openMockPaperModal(subject);
+      startExamTimer();
+      showToast('90-minute exam timer started');
+    }
+
+    function getFlashcardBack(topic) {
+      if (FLASHCARD_HINTS[topic.id]) return FLASHCARD_HINTS[topic.id];
+      if (topic.type === 'calculation') return `Know formulas + solve 2 practice problems on: ${topic.title}`;
+      if (topic.type === 'writing') return `Memorize format, structure, and a sample outline for: ${topic.title}`;
+      return `Define, explain with example, list 3 exam points for: ${topic.title}`;
+    }
+
+    function buildFlashcardDeck(subject, filter) {
+      let topics = [...subject.topics];
+      if (filter === 'important') topics = topics.filter(t => t.important);
+      if (filter === 'pending') topics = topics.filter(t => !isDone(t.id));
+      return shuffle(topics.map(t => ({ id: t.id, front: t.title, back: getFlashcardBack(t) })));
+    }
+
+    function renderFlashcardUI() {
+      const { cards, index, flipped } = flashcardState;
+      if (!cards.length) {
+        return '<p>No cards match this filter. Try "All topics".</p>';
+      }
+      const card = cards[index];
+      const fc = document.getElementById('flashcard');
+      if (fc) fc.classList.toggle('flipped', flipped);
+      return `
+        <div class="flashcard-progress">Card ${index + 1} of ${cards.length}</div>
+        <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Tap to flip">
+          <div class="flashcard-inner">
+            <div class="flashcard-face front">
+              <span class="fc-label">Topic</span>
+              <span class="fc-text">${escapeHtml(card.front)}</span>
+            </div>
+            <div class="flashcard-face back">
+              <span class="fc-label">Study hint</span>
+              <span class="fc-text">${escapeHtml(card.back)}</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.75rem;color:#64748b;margin-bottom:0.75rem">Tap card to flip</p>
+        <div class="flashcard-nav">
+          <button type="button" class="btn" id="fcPrev">← Prev</button>
+          <button type="button" class="btn btn-primary" id="fcKnow">✓ Got it</button>
+          <button type="button" class="btn" id="fcAgain">↻ Again</button>
+          <button type="button" class="btn" id="fcNext">Next →</button>
+        </div>
+      `;
+    }
+
+    function bindFlashcardEvents(subject) {
+      const rerender = () => {
+        const area = document.getElementById('fcArea');
+        if (area) area.innerHTML = renderFlashcardUI();
+        bindFlashcardEvents(subject);
+      };
+
+      const fc = document.getElementById('flashcard');
+      if (fc) {
+        fc.onclick = () => {
+          flashcardState.flipped = !flashcardState.flipped;
+          fc.classList.toggle('flipped', flashcardState.flipped);
+        };
+      }
+      const prev = document.getElementById('fcPrev');
+      const next = document.getElementById('fcNext');
+      const know = document.getElementById('fcKnow');
+      const again = document.getElementById('fcAgain');
+      if (prev) prev.onclick = () => {
+        flashcardState.index = (flashcardState.index - 1 + flashcardState.cards.length) % flashcardState.cards.length;
+        flashcardState.flipped = false;
+        rerender();
+      };
+      if (next) next.onclick = () => {
+        flashcardState.index = (flashcardState.index + 1) % flashcardState.cards.length;
+        flashcardState.flipped = false;
+        rerender();
+      };
+      if (know) know.onclick = () => {
+        const card = flashcardState.cards[flashcardState.index];
+        progress[card.id] = true;
+        saveProgress();
+        updateSidebarProgress();
+        flashcardState.cards.splice(flashcardState.index, 1);
+        if (!flashcardState.cards.length) {
+          showToast('All cards reviewed!');
+          closeModal();
+          renderSubject(activeSubjectId, false);
+          return;
+        }
+        if (flashcardState.index >= flashcardState.cards.length) flashcardState.index = 0;
+        flashcardState.flipped = false;
+        rerender();
+      };
+      if (again) again.onclick = () => {
+        const card = flashcardState.cards.splice(flashcardState.index, 1)[0];
+        flashcardState.cards.push(card);
+        flashcardState.flipped = false;
+        rerender();
+      };
+    }
+
+    function openFlashcardsModal(subject, filter = 'important') {
+      flashcardState = {
+        cards: buildFlashcardDeck(subject, filter),
+        index: 0,
+        flipped: false
+      };
+      if (!flashcardState.cards.length) {
+        openModal(
+          `Flashcards — ${subject.name}`,
+          '<p>No cards for this filter. Try "All topics" or "To study".</p>',
+          ''
+        );
+        return;
+      }
+      const filtersHtml = `
+        <div class="flashcard-filters">
+          <label><input type="radio" name="fcFilter" value="important" ${filter === 'important' ? 'checked' : ''}> ★ Important</label>
+          <label><input type="radio" name="fcFilter" value="pending" ${filter === 'pending' ? 'checked' : ''}> To study</label>
+          <label><input type="radio" name="fcFilter" value="all" ${filter === 'all' ? 'checked' : ''}> All topics</label>
+        </div>
+      `;
+      openModal(
+        `Flashcards — ${subject.name}`,
+        `<div class="flashcard-wrap">${filtersHtml}<div id="fcArea">${renderFlashcardUI()}</div></div>`,
+        ''
+      );
+      document.querySelectorAll('input[name="fcFilter"]').forEach(r => {
+        r.onchange = () => {
+          if (r.checked) openFlashcardsModal(subject, r.value);
+        };
+      });
+      bindFlashcardEvents(subject);
+    }
+
     function renderToolsSection(subject) {
       const days = getDaysUntilExam(subject.id);
       let countdown = '<span class="countdown-badge">Set exam date ↓</span>';
@@ -1537,6 +1931,8 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
         <h3>📝 Exam & paper tools</h3>
         <div class="tools-grid">
           <button type="button" class="btn btn-primary" id="btnMockPaper">📝 Generate mock paper</button>
+          <button type="button" class="btn btn-primary" id="btnTimedExam">⏱️ 90-min timed exam</button>
+          <button type="button" class="btn" id="btnFlashcards">🃏 Flashcards</button>
           ${hasFormula ? '<button type="button" class="btn" id="btnFormula">📐 Formula sheet</button>' : ''}
           <button type="button" class="btn btn-copy" id="btnPaperAi">📋 Full paper AI prompt</button>
         </div>
@@ -1549,6 +1945,8 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
       `;
 
       document.getElementById('btnMockPaper').onclick = () => openMockPaperModal(subject);
+      document.getElementById('btnTimedExam').onclick = () => openTimedExam(subject);
+      document.getElementById('btnFlashcards').onclick = () => openFlashcardsModal(subject, 'important');
       if (hasFormula) document.getElementById('btnFormula').onclick = () => openFormulaModal(subject);
       document.getElementById('btnPaperAi').onclick = () => {
         navigator.clipboard.writeText(buildPaperAiPrompt(subject)).then(() => showToast('Full paper prompt copied — paste in Claude.ai'));
@@ -1836,9 +2234,16 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
     });
 
     document.getElementById('overlay').addEventListener('click', closeSidebar);
-    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalClose').addEventListener('click', () => {
+      closeModal();
+    });
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'modalOverlay') closeModal();
+    });
+    document.getElementById('timerPause').addEventListener('click', toggleTimerPause);
+    document.getElementById('timerStop').addEventListener('click', () => {
+      stopExamTimer();
+      showToast('Exam timer stopped');
     });
 
     renderSidebar();
