@@ -1091,33 +1091,39 @@
     const FREE_BOOKS = {
       fa: {
         title: 'Principles of Financial Accounting (OpenStax)',
-        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Principles_of_Accounting_Volume_1_Financial_Accounting-WEB.pdf',
-        web: 'https://openstax.org/books/principles-financial-accounting/pages/1-why-it-matters'
+        pdf: 'https://openstax.org/details/books/principles-financial-accounting',
+        web: 'https://openstax.org/books/principles-financial-accounting/pages/1-why-it-matters',
+        directPdf: false
       },
       math: {
         title: 'Business Math: Step-by-Step Handbook (Free)',
         pdf: 'https://openlibrary-repo.ecampusontario.ca/jspui/bitstream/123456789/340/11/Business-Math-A-Step-by-Step-Handbook-1622204522.pdf',
-        web: 'https://open.umn.edu/opentextbooks/textbooks/business-math-a-step-by-step-handbook'
+        web: 'https://open.umn.edu/opentextbooks/textbooks/business-math-a-step-by-step-handbook',
+        directPdf: true
       },
       econ: {
         title: 'Principles of Microeconomics 3e (OpenStax)',
-        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Microeconomics3e-WEB.pdf',
-        web: 'https://openstax.org/books/principles-microeconomics-3e/pages/1-introduction'
+        pdf: 'https://openstax.org/details/books/principles-microeconomics-3e',
+        web: 'https://openstax.org/books/principles-microeconomics-3e/pages/1-introduction',
+        directPdf: false
       },
       mgt: {
         title: 'Principles of Management (OpenStax)',
-        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/PrinciplesofManagement-OP_mGBMvoU.pdf',
-        web: 'https://openstax.org/books/principles-management/pages/1-introduction'
+        pdf: 'https://openstax.org/details/books/principles-management',
+        web: 'https://openstax.org/books/principles-management/pages/1-introduction',
+        directPdf: false
       },
       mkt: {
         title: 'Principles of Marketing (OpenStax)',
-        pdf: 'https://assets.openstax.org/oscms-prodcms/media/documents/Principles_Marketing-WEB.pdf',
-        web: 'https://openstax.org/books/principles-marketing/pages/1-introduction'
+        pdf: 'https://openstax.org/details/books/principles-marketing',
+        web: 'https://openstax.org/books/principles-marketing/pages/1-introduction',
+        directPdf: false
       },
       comm: {
         title: 'Business Communication for Success (Free PDF)',
         pdf: 'https://2012books.lardbucket.org/pdfs/communication-for-business-success.pdf',
-        web: 'https://open.umn.edu/opentextbooks/textbooks/8'
+        web: 'https://open.umn.edu/opentextbooks/textbooks/8',
+        directPdf: true
       }
     };
 
@@ -1159,7 +1165,11 @@
     };
 
     function isFreePdfUrl(url) {
-      return /openstax\.org|assets\.openstax\.org|lardbucket\.org|ecampusontario|pressbooks\.pub|openlibrary-repo|open\.umn\.edu/i.test(url);
+      return /openstax\.org|lardbucket\.org|ecampusontario|pressbooks\.pub|openlibrary-repo|open\.umn\.edu/i.test(url);
+    }
+
+    function isDirectPdfLink(url) {
+      return /\.pdf(\?|$)/i.test(url);
     }
 
     const SUBJECTS = [
@@ -2212,12 +2222,19 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
 
       const doRender = () => {
         const fb = subject.freeBook;
+        const bookBtnLabel = fb && (fb.directPdf || isDirectPdfLink(fb.pdf))
+          ? '📥 Download PDF'
+          : '📥 Get free book (OpenStax)';
+        const openStaxTip = fb && !fb.directPdf && !isDirectPdfLink(fb.pdf)
+          ? '<p style="font-size:0.75rem;margin-top:0.5rem;color:#64748b">OpenStax page par <strong>Get the book</strong> → <strong>Download a PDF</strong> choose karein.</p>'
+          : '';
         const freeBookHtml = fb ? `
           <div class="free-books">
             <h3>📚 Free textbook — poora subject</h3>
             <p>100% free, legal (OpenStax / Open Textbook). ★ important topics ke neeche chapter links bhi free hain.</p>
-            <a class="btn btn-free" href="${fb.pdf}" target="_blank" rel="noopener">📥 Full book PDF</a>
+            <a class="btn btn-free" href="${fb.pdf}" target="_blank" rel="noopener">${bookBtnLabel}</a>
             <a class="btn" href="${fb.web}" target="_blank" rel="noopener">🌐 Read online</a>
+            ${openStaxTip}
           </div>
         ` : '';
 
