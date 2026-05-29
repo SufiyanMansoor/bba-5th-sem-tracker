@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="BBA 5th Semester study tracker — Karachi University">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>BBA 5th Sem Tracker — Karachi University</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +28,22 @@
       --sidebar-width: 280px;
       --transition: 0.25s ease;
     }
+
+    [data-theme="dark"] {
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --green-bg: #14532d33;
+      --amber-bg: #78350f33;
+    }
+
+    [data-theme="dark"] .sidebar { background: #020617; }
+    [data-theme="dark"] .free-books { background: linear-gradient(135deg, #1e3a5f 0%, #14532d44 100%); border-color: #334155; }
+    [data-theme="dark"] .topic-card.done { background: #14532d33; border-color: #166534; }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1018,6 +1037,130 @@
 
       .exam-timer-bar { left: 0; }
     }
+
+    .sidebar-smart {
+      padding: 1rem 1.25rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: auto;
+    }
+
+    .streak-box {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #fbbf24;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .sidebar-smart .btn {
+      width: 100%;
+      margin-bottom: 0.4rem;
+      justify-content: center;
+      color: #e2e8f0;
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .sidebar-smart .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    #smartHubPanel { display: none; }
+    #smartHubPanel.active { display: block; }
+
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .hub-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .hub-card h4 { font-family: 'Outfit', sans-serif; color: var(--navy); margin-bottom: 0.5rem; }
+
+    .marks-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .marks-row input { width: 3rem; padding: 0.25rem; border: 1px solid var(--border); border-radius: 6px; }
+
+    .weekly-plan { padding-left: 1.2rem; }
+    .weekly-plan li { margin-bottom: 0.35rem; }
+
+    .revision-list { padding-left: 1.2rem; max-height: 300px; overflow-y: auto; }
+
+    .btn-pin {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      opacity: 0.5;
+      float: right;
+    }
+
+    .btn-pin.active { opacity: 1; }
+
+    .topic-note {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      resize: vertical;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .topic-actions-extra { display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap; }
+
+    .revision-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+    }
+
+    .quiz-q { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .quiz-opts label { display: block; margin: 0.35rem 0; font-size: 0.85rem; cursor: pointer; }
+
+    .mock-answer-key {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 2px dashed var(--border);
+      font-size: 0.85rem;
+    }
+
+    .pomodoro-widget {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: #fff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 999px;
+      z-index: 320;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .pomodoro-widget.hidden { display: none; }
+
+    .pomodoro-widget .btn { color: #fff; border-color: rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
@@ -1047,9 +1190,16 @@
       </div>
 
       <ul class="subject-nav" id="subjectNav"></ul>
+      <div class="sidebar-smart">
+        <div class="streak-box">🔥 <span id="streakCount">0</span> day streak</div>
+        <button type="button" class="btn" id="btnSmartHub">⚡ Smart Hub</button>
+        <button type="button" class="btn" id="btnDarkMode">🌙 Dark</button>
+        <button type="button" class="btn" id="btnUrdu">اردو</button>
+      </div>
     </aside>
 
     <main class="main">
+      <div id="smartHubPanel"></div>
       <div class="content-area" id="contentArea">
         <header class="subject-header" id="subjectHeader"></header>
         <div class="stats-row" id="statsRow"></div>
@@ -1061,6 +1211,11 @@
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <div class="pomodoro-widget hidden" id="pomodoroWidget">
+    <span id="pomodoroDisplay">Study 25:00</span>
+    <button type="button" class="btn" id="pomodoroStop">Stop</button>
+  </div>
 
   <div class="exam-timer-bar hidden" id="examTimerBar" aria-live="polite">
     <span class="timer-label" id="timerLabel">Exam mode</span>
@@ -2383,12 +2538,48 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       showToast('Exam timer stopped');
     });
 
+    window.BbaApp = {
+      STORAGE_KEY,
+      PAST_PAPER_KEY,
+      EXAM_DATES_KEY,
+      TIMER_MINS_KEY,
+      SUBJECTS,
+      get progress() { return progress; },
+      get activeSubjectId() { return activeSubjectId; },
+      set activeSubjectId(v) { activeSubjectId = v; },
+      isDone,
+      toggleTopic,
+      saveProgress,
+      renderSubject,
+      renderTopicCard,
+      bindTopicCheckboxes,
+      getOverallPct,
+      getSubjectPct,
+      getPastCount,
+      getDaysUntilExam,
+      getTopicById,
+      showToast,
+      openModal,
+      closeModal,
+      escapeHtml,
+      openMockPaperModal,
+      openFlashcardsModal,
+      renderToolsSection
+    };
+
     renderSidebar();
     updateSidebarProgress();
     requestAnimationFrame(() => {
       updateSidebarProgress();
       renderSubject(activeSubjectId, false);
+      if (window.initSmartFeatures) initSmartFeatures();
     });
+  </script>
+  <script src="smart.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
   </script>
 </body>
 </html>
