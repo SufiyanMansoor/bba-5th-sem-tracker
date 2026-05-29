@@ -105,7 +105,7 @@ Baaki semesters: har course par **5 smart study steps** (syllabus, midterm, fina
 ## Kaise use karein
 
 1. **Live site** kholo (link upar).
-2. Sidebar → **My semester** → apna semester select karo.
+2. Sidebar → **semester grid (Y1 S1 … Y4 S2)** → apna semester tap karo.
 3. **Semester overview** → subject card click karo.
 4. Har topic: **YouTube + PDF** → parho → **checkbox** tick karo.
 5. **Past** button se past paper practice log karo.

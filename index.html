@@ -1105,148 +1105,92 @@
     }
 
 
-    .sem-picker-label {
+    /* Semester grid — no dropdown, no native select */
+    .sem-rail-title {
       font-size: 0.62rem;
       color: #94a3b8;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.5rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .sem-picker-btn {
-      width: 100%;
+    .sem-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .sem-chip {
+      aspect-ratio: 1;
+      min-height: 44px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      color: #94a3b8;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 0.25rem;
-      padding: 0.7rem 0.85rem;
-      margin-bottom: 0.55rem;
-      border-radius: var(--radius);
-      border: 1px solid rgba(201,162,39,0.25);
-      background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(255,255,255,0.06) 100%);
-      color: #fff;
-      font-family: inherit;
-      cursor: pointer;
-      text-align: left;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .sem-picker-btn:hover {
-      border-color: rgba(201,162,39,0.5);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-
-    .sem-picker-main {
-      font-size: 0.82rem;
-      font-weight: 600;
-      line-height: 1.35;
-    }
-
-    .sem-picker-action {
-      font-size: 0.68rem;
-      color: var(--gold-light);
-      font-weight: 500;
-    }
-
-    .sem-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.25rem;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.25s, visibility 0.25s;
+      gap: 0.1rem;
+      padding: 0.2rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
     }
 
-    .sem-modal.open {
-      opacity: 1;
-      visibility: visible;
+    .sem-chip:hover {
+      background: rgba(37,99,235,0.2);
+      border-color: rgba(96,165,250,0.5);
+      color: #e2e8f0;
+      transform: translateY(-1px);
     }
 
-    .sem-modal-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(12,18,34,0.65);
-      backdrop-filter: blur(4px);
+    .sem-chip.active {
+      background: linear-gradient(145deg, #e8c96a 0%, #c9a227 55%, #a8841f 100%);
+      border-color: #f5e6b8;
+      color: #0c1222;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(201,162,39,0.45);
+      transform: scale(1.04);
     }
 
-    .sem-modal-box {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      max-height: 85vh;
-      overflow-y: auto;
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      padding: 1.35rem;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-    }
-
-    .sem-modal-box h3 {
-      font-size: 1.1rem;
-      color: var(--navy);
-      margin-bottom: 0.35rem;
-    }
-
-    .sem-modal-box > p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .sem-modal-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .sem-modal-option {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg);
-      font-family: inherit;
-      font-size: 0.85rem;
-      color: var(--text);
-      cursor: pointer;
-      text-align: left;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .sem-modal-option:hover {
-      border-color: var(--accent);
-      background: #eff6ff;
-    }
-
-    .sem-modal-option.active {
-      border-color: var(--accent);
-      background: linear-gradient(90deg, #eff6ff 0%, #fff 100%);
+    .sem-chip-y {
+      font-size: 0.58rem;
       font-weight: 600;
-      box-shadow: inset 3px 0 0 var(--gold);
+      letter-spacing: 0.04em;
+      opacity: 0.85;
     }
 
-    .sem-modal-close {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      width: 32px;
-      height: 32px;
-      border: none;
-      border-radius: 8px;
-      background: var(--bg);
-      font-size: 1.25rem;
-      cursor: pointer;
-      color: var(--text-muted);
+    .sem-chip.active .sem-chip-y { opacity: 0.9; }
+
+    .sem-chip-s {
+      font-size: 0.78rem;
+      font-weight: 700;
       line-height: 1;
+    }
+
+    .sem-current-banner {
+      font-size: 0.72rem;
+      line-height: 1.35;
+      color: #e2e8f0;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(96,165,250,0.25);
+      border-radius: 8px;
+      padding: 0.45rem 0.55rem;
+      margin-bottom: 0.55rem;
+      text-align: center;
+    }
+
+    .sem-current-banner strong {
+      display: block;
+      color: var(--gold-light);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
     }
 
     .student-benefits {
@@ -1648,16 +1592,6 @@
     </main>
   </div>
 
-  <div class="sem-modal" id="semModal" aria-hidden="true">
-    <div class="sem-modal-backdrop" id="semModalBackdrop"></div>
-    <div class="sem-modal-box" role="dialog" aria-labelledby="semModalTitle">
-      <button type="button" class="sem-modal-close" id="semModalClose" aria-label="Close">&times;</button>
-      <h3 id="semModalTitle">Select your semester</h3>
-      <p>8 semesters · 48 courses — apna current semester choose karein</p>
-      <div class="sem-modal-grid" id="semModalGrid"></div>
-    </div>
-  </div>
-
   <div class="toast" id="toast"></div>
 
   <div class="pomodoro-widget hidden" id="pomodoroWidget">
@@ -1683,7 +1617,7 @@
     </div>
   </div>
 
-  <script src="syllabus-data.js"></script>
+  <script src="syllabus-data.js?v=6"></script>
   <script>
     const STORAGE_KEY = 'bba5_progress_v2';
     const PAST_PAPER_KEY = 'bba5_pastpapers_v1';
@@ -1850,53 +1784,34 @@
         </div>`;
     }
 
-    function closeSemesterModal() {
-      const modal = document.getElementById('semModal');
-      if (modal) {
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden', 'true');
-      }
-    }
-
-    function openSemesterModal() {
-      const modal = document.getElementById('semModal');
-      const grid = document.getElementById('semModalGrid');
-      if (!modal || !grid) return;
-      grid.innerHTML = BBA_PROGRAM.semesters.map(s =>
-        `<button type="button" class="sem-modal-option ${s.id === activeSemesterId ? 'active' : ''}" data-sem="${s.id}">${escapeHtml(s.label)}</button>`
-      ).join('');
-      grid.querySelectorAll('[data-sem]').forEach(btn => {
-        btn.onclick = () => {
-          closeSemesterModal();
-          switchSemester(btn.dataset.sem);
-        };
-      });
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
     function renderSemControls() {
       const el = document.getElementById('sidebarControls');
       if (!el) return;
       const currentSem = getSemester(activeSemesterId);
+      const chips = BBA_PROGRAM.semesters.map(s => {
+        const y = s.year || 1;
+        const n = s.semester || 1;
+        const active = s.id === activeSemesterId ? ' active' : '';
+        return `<button type="button" class="sem-chip${active}" data-sem="${s.id}" title="${escapeHtml(s.label)}" aria-label="${escapeHtml(s.label)}">
+          <span class="sem-chip-y">Y${y}</span>
+          <span class="sem-chip-s">S${n}</span>
+        </button>`;
+      }).join('');
       el.innerHTML = `
-        <p class="sem-picker-label">Current semester</p>
-        <button type="button" class="sem-picker-btn" id="semPickerBtn">
-          <span class="sem-picker-main">${escapeHtml(currentSem.label)}</span>
-          <span class="sem-picker-action">Tap to change semester</span>
-        </button>
+        <p class="sem-rail-title">Select semester</p>
+        <div class="sem-grid" role="group" aria-label="Semester selection">${chips}</div>
+        <div class="sem-current-banner">
+          <strong>Active</strong>
+          ${escapeHtml(currentSem.label)}
+        </div>
         <button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button>
       `;
-      document.getElementById('semPickerBtn').onclick = openSemesterModal;
+      el.querySelectorAll('.sem-chip').forEach(btn => {
+        btn.onclick = () => switchSemester(btn.dataset.sem);
+      });
       document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
       const top = document.getElementById('topbarSemLabel');
       if (top) top.textContent = currentSem.label;
-    }
-
-    if (!window._semModalBound) {
-      window._semModalBound = true;
-      document.getElementById('semModalBackdrop')?.addEventListener('click', closeSemesterModal);
-      document.getElementById('semModalClose')?.addEventListener('click', closeSemesterModal);
     }
 
     function renderSemesterDashboard() {
@@ -3006,10 +2921,11 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       if (window.initSmartFeatures) initSmartFeatures();
     });
   </script>
-  <script src="smart.js"></script>
+  <script src="smart.js?v=6"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      navigator.serviceWorker.register('sw.js?v=6').then(reg => reg.update()).catch(() => {});
+      caches.keys().then(keys => keys.filter(k => k.startsWith('bba') && k !== 'bba9-v6').forEach(k => caches.delete(k)));
     }
   </script>
 </body>
