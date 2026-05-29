@@ -1,4 +1,4 @@
-const CACHE = 'bba9-v6';
+const CACHE = 'bba9-v7';
 const ASSETS = ['./', './index.html', './syllabus-data.js', './smart.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

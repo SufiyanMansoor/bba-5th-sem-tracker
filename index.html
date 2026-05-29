@@ -4,7 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0c1222">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="KU BS(BBA) full 8-semester study tracker — syllabus, topics, mock papers, progress">
+  <script>
+    (function () {
+      var V = '7';
+      if (localStorage.getItem('bba_app_v') === V) return;
+      localStorage.setItem('bba_app_v', V);
+      if ('caches' in window) {
+        caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+        });
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          return Promise.all(regs.map(function (r) { return r.unregister(); }));
+        });
+      }
+      if (!sessionStorage.getItem('bba_reload_' + V)) {
+        sessionStorage.setItem('bba_reload_' + V, '1');
+        location.reload();
+      }
+    })();
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <title>BBA Full Program Tracker — KU 8 Semesters</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1105,6 +1127,16 @@
     }
 
 
+    /* Hide legacy dropdown if old cache still injects it */
+    .sidebar select#semesterSelect,
+    .sidebar .semester-select,
+    .sidebar .sem-dropdown-menu {
+      display: none !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      visibility: hidden !important;
+    }
+
     /* Semester grid — no dropdown, no native select */
     .sem-rail-title {
       font-size: 0.62rem;
@@ -1125,10 +1157,10 @@
     .sem-chip {
       aspect-ratio: 1;
       min-height: 44px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(148,163,184,0.2);
       border-radius: 10px;
-      background: rgba(255,255,255,0.04);
-      color: #94a3b8;
+      background: linear-gradient(160deg, #1a2332 0%, #121a28 100%);
+      color: #cbd5e1;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -1141,20 +1173,22 @@
     }
 
     .sem-chip:hover {
-      background: rgba(37,99,235,0.2);
-      border-color: rgba(96,165,250,0.5);
-      color: #e2e8f0;
+      background: linear-gradient(160deg, #1e3a5f 0%, #172554 100%);
+      border-color: rgba(96,165,250,0.55);
+      color: #f1f5f9;
       transform: translateY(-1px);
     }
 
     .sem-chip.active {
-      background: linear-gradient(145deg, #e8c96a 0%, #c9a227 55%, #a8841f 100%);
-      border-color: #f5e6b8;
-      color: #0c1222;
+      background: linear-gradient(145deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+      border-color: #93c5fd;
+      color: #fff;
       font-weight: 700;
-      box-shadow: 0 4px 14px rgba(201,162,39,0.45);
+      box-shadow: 0 4px 16px rgba(37,99,235,0.5);
       transform: scale(1.04);
     }
+
+    .sem-chip.active .sem-chip-y { color: #dbeafe; }
 
     .sem-chip-y {
       font-size: 0.58rem;
@@ -1175,8 +1209,8 @@
       font-size: 0.72rem;
       line-height: 1.35;
       color: #e2e8f0;
-      background: rgba(37,99,235,0.15);
-      border: 1px solid rgba(96,165,250,0.25);
+      background: linear-gradient(90deg, rgba(37,99,235,0.22) 0%, rgba(201,162,39,0.12) 100%);
+      border: 1px solid rgba(96,165,250,0.35);
       border-radius: 8px;
       padding: 0.45rem 0.55rem;
       margin-bottom: 0.55rem;
@@ -1536,7 +1570,7 @@
       <div class="sidebar-header">
         <h1>BBA Full Program</h1>
         <p class="university">Karachi University · KUBS</p>
-        <span class="brand-tag">Enterprise Edition</span>
+        <span class="brand-tag">Enterprise · v7</span>
       </div>
 
       <div class="overall-progress">
@@ -1617,7 +1651,7 @@
     </div>
   </div>
 
-  <script src="syllabus-data.js?v=6"></script>
+  <script src="syllabus-data.js?v=7"></script>
   <script>
     const STORAGE_KEY = 'bba5_progress_v2';
     const PAST_PAPER_KEY = 'bba5_pastpapers_v1';
@@ -1784,7 +1818,15 @@
         </div>`;
     }
 
+    function purgeLegacySemesterUI() {
+      document.querySelectorAll('#semesterSelect, .semester-select, .sem-dropdown, .sem-picker-wrap').forEach(el => el.remove());
+      document.querySelectorAll('.subject-nav label.sem-picker-label').forEach(el => {
+        if (/semester/i.test(el.textContent)) el.closest('li')?.remove();
+      });
+    }
+
     function renderSemControls() {
+      purgeLegacySemesterUI();
       const el = document.getElementById('sidebarControls');
       if (!el) return;
       const currentSem = getSemester(activeSemesterId);
@@ -2921,11 +2963,11 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       if (window.initSmartFeatures) initSmartFeatures();
     });
   </script>
-  <script src="smart.js?v=6"></script>
+  <script src="smart.js?v=7"></script>
   <script>
+    purgeLegacySemesterUI();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=6').then(reg => reg.update()).catch(() => {});
-      caches.keys().then(keys => keys.filter(k => k.startsWith('bba') && k !== 'bba9-v6').forEach(k => caches.delete(k)));
+      navigator.serviceWorker.register('sw.js?v=7').then(function (reg) { return reg.update(); }).catch(function () {});
     }
   </script>
 </body>
