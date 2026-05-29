@@ -574,6 +574,238 @@
       transform: translateY(0);
     }
 
+    .tools-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .tools-section h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .exam-date-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .exam-date-row input[type="date"] {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+    }
+
+    .countdown-badge {
+      background: var(--amber-bg);
+      color: #b45309;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .countdown-badge.urgent { background: #fef2f2; color: #dc2626; }
+
+    .high-freq {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .high-freq ul {
+      margin-top: 0.35rem;
+      padding-left: 1.2rem;
+    }
+
+    .high-freq li { margin-bottom: 0.2rem; }
+
+    .past-badge {
+      font-size: 0.65rem;
+      background: #ede9fe;
+      color: #5b21b6;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      margin-left: 0.35rem;
+    }
+
+    .btn-past {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.6rem;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 400;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border-radius: 14px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      color: var(--navy);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 1.25rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .mock-paper {
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .mock-paper .paper-head {
+      text-align: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--navy);
+    }
+
+    .mock-paper .paper-head h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      color: var(--navy);
+    }
+
+    .mock-paper .section-block {
+      margin-bottom: 1.25rem;
+    }
+
+    .mock-paper .section-block h5 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .mock-paper ol { padding-left: 1.25rem; }
+    .mock-paper li { margin-bottom: 0.65rem; }
+
+    .formula-sheet h4 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--navy);
+      margin: 1rem 0 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .formula-sheet h4:first-child { margin-top: 0; }
+
+    .formula-sheet .formula {
+      background: var(--bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      margin: 0.35rem 0;
+    }
+
+    .past-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+
+    .past-form select, .past-form input {
+      padding: 0.4rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+
+    .past-log-list {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      .modal-overlay.open,
+      .modal-overlay.open .modal,
+      .modal-overlay.open .modal * { visibility: visible; }
+      .modal-overlay.open {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        display: block;
+        padding: 0;
+      }
+      .modal-overlay.open .modal {
+        max-width: 100%;
+        max-height: none;
+        box-shadow: none;
+      }
+      .modal-header, .modal-footer { display: none !important; }
+      .modal-body { padding: 0.5in; }
+    }
+
     @media (max-width: 900px) {
       .menu-toggle { display: flex; flex-direction: column; }
 
@@ -627,6 +859,7 @@
       <div class="content-area" id="contentArea">
         <header class="subject-header" id="subjectHeader"></header>
         <div class="stats-row" id="statsRow"></div>
+        <section class="tools-section" id="toolsSection"></section>
         <div id="topicsContainer"></div>
         <section class="ai-section" id="aiSection"></section>
       </div>
@@ -635,8 +868,21 @@
 
   <div class="toast" id="toast"></div>
 
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle">Modal</h3>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = 'bba5_progress_v2';
+    const PAST_PAPER_KEY = 'bba5_pastpapers_v1';
+    const EXAM_DATES_KEY = 'bba5_exam_dates_v1';
     const CIRCUMFERENCE = 2 * Math.PI * 45;
 
     const TYPE_MAP = { theory: 'concept', calculation: 'calculation', writing: 'writing' };
@@ -935,8 +1181,63 @@
       });
     });
 
+    const PAPER_TEMPLATES = {
+      fa: { mcq: 10, short: 3, long: 1, numerical: 3, writing: 0, marks: 60 },
+      math: { mcq: 8, short: 2, long: 0, numerical: 5, writing: 0, marks: 60 },
+      econ: { mcq: 10, short: 4, long: 2, numerical: 1, writing: 0, marks: 60 },
+      mgt: { mcq: 10, short: 5, long: 2, numerical: 0, writing: 0, marks: 60 },
+      mkt: { mcq: 10, short: 5, long: 2, numerical: 0, writing: 0, marks: 60 },
+      comm: { mcq: 5, short: 2, long: 0, numerical: 0, writing: 4, marks: 60 }
+    };
+
+    const FORMULA_SHEETS = {
+      fa: `
+        <h4>Accounting equations</h4>
+        <div class="formula">Assets = Liabilities + Stockholders' Equity</div>
+        <div class="formula">Net Income = Revenues − Expenses</div>
+        <h4>Inventory</h4>
+        <div class="formula">FIFO: oldest cost → COGS | LIFO: newest cost → COGS</div>
+        <div class="formula">Weighted Avg = Total cost ÷ Total units</div>
+        <h4>EPS</h4>
+        <div class="formula">Basic EPS = (Net Income − Preferred dividends) ÷ Weighted avg shares</div>
+        <h4>Cash flow</h4>
+        <div class="formula">Indirect: Net income + non-cash charges ± working capital changes</div>
+      `,
+      math: `
+        <h4>Percent & ratio</h4>
+        <div class="formula">% change = (New − Old) ÷ Old × 100</div>
+        <h4>Break-even</h4>
+        <div class="formula">Break-even units = Fixed cost ÷ (Price − Variable cost per unit)</div>
+        <div class="formula">Break-even sales = Fixed cost ÷ Contribution margin ratio</div>
+        <h4>Simple interest</h4>
+        <div class="formula">I = P × r × t</div>
+        <h4>Compound interest</h4>
+        <div class="formula">A = P(1 + i)ⁿ | FV = PV(1 + i)ⁿ</div>
+        <h4>Annuity</h4>
+        <div class="formula">FV annuity = PMT × [(1+i)ⁿ − 1] ÷ i</div>
+        <div class="formula">PV annuity = PMT × [1 − (1+i)⁻ⁿ] ÷ i</div>
+        <h4>Linear (2 variables)</h4>
+        <div class="formula">a₁x + b₁y = c₁ ; a₂x + b₂y = c₂ → elimination or substitution</div>
+      `,
+      econ: `
+        <h4>Elasticity</h4>
+        <div class="formula">Price elasticity Eᴅ = %ΔQ ÷ %ΔP</div>
+        <div class="formula">Income elasticity = %ΔQ ÷ %ΔIncome</div>
+        <div class="formula">Cross elasticity = %ΔQˣ ÷ %ΔPʸ</div>
+        <h4>Demand & supply</h4>
+        <div class="formula">Equilibrium: Qᴅ = Qₛ at price P*</div>
+        <h4>Profit maximization</h4>
+        <div class="formula">MR = MC (firm produces where marginal revenue = marginal cost)</div>
+        <h4>Perfect competition</h4>
+        <div class="formula">P = MR = AR in long-run equilibrium (economic profit → 0)</div>
+      `
+    };
+
     let progress = loadProgress();
+    let pastPapers = loadPastPapers();
+    let examDates = loadExamDates();
     let activeSubjectId = SUBJECTS[0].id;
+    let modalTopicId = null;
 
     function loadProgress() {
       try {
@@ -949,6 +1250,315 @@
 
     function saveProgress() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function loadPastPapers() {
+      try {
+        const raw = localStorage.getItem(PAST_PAPER_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch { return {}; }
+    }
+
+    function savePastPapers() {
+      localStorage.setItem(PAST_PAPER_KEY, JSON.stringify(pastPapers));
+    }
+
+    function loadExamDates() {
+      try {
+        const raw = localStorage.getItem(EXAM_DATES_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch { return {}; }
+    }
+
+    function saveExamDates() {
+      localStorage.setItem(EXAM_DATES_KEY, JSON.stringify(examDates));
+    }
+
+    function getPastCount(topicId) {
+      return (pastPapers[topicId] || []).length;
+    }
+
+    function getExamType(topic) {
+      if (topic.type === 'calculation') return 'numerical';
+      if (topic.type === 'writing') return 'writing';
+      return topic.important ? 'long' : 'short';
+    }
+
+    function getTopicById(topicId) {
+      for (const s of SUBJECTS) {
+        const t = s.topics.find(x => x.id === topicId);
+        if (t) return { subject: s, topic: t };
+      }
+      return null;
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickTopicsForPaper(subject, examType, count) {
+      let pool = subject.topics.filter(t => getExamType(t) === examType);
+      if (pool.length < count) {
+        const extra = subject.topics.filter(t => !pool.includes(t) && t.important);
+        pool = [...pool, ...extra];
+      }
+      if (pool.length < count) pool = [...subject.topics];
+
+      const scored = pool.map(t => ({
+        t,
+        score: getPastCount(t.id) * 4 + (t.important ? 2 : 0) + (!isDone(t.id) ? 1 : 0) + Math.random() * 0.5
+      }));
+      scored.sort((a, b) => b.score - a.score);
+      const picked = [];
+      const used = new Set();
+      for (const { t } of scored) {
+        if (picked.length >= count) break;
+        if (!used.has(t.id)) { picked.push(t); used.add(t.id); }
+      }
+      while (picked.length < count && pool.length) {
+        const t = pool[picked.length % pool.length];
+        if (!used.has(t.id)) { picked.push(t); used.add(t.id); }
+        else break;
+      }
+      return shuffle(picked.slice(0, count));
+    }
+
+    function questionText(topic, examType, marks) {
+      const title = topic.title;
+      const prompts = {
+        mcq: `Choose the best answer about: ${title}. (A) ___ (B) ___ (C) ___ (D) ___`,
+        short: `(${marks} marks) Define and explain briefly: ${title}.`,
+        long: `(${marks} marks) Discuss in detail with examples: ${title}.`,
+        numerical: `(${marks} marks) Solve a numerical problem on: ${title}. Show all steps.`,
+        writing: `(${marks} marks) Write a proper business format for: ${title}.`
+      };
+      return prompts[examType] || prompts.short;
+    }
+
+    function buildMockPaper(subject) {
+      const tpl = PAPER_TEMPLATES[subject.id] || PAPER_TEMPLATES.fa;
+      const date = new Date().toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' });
+      let html = `
+        <div class="mock-paper" id="printablePaper">
+          <div class="paper-head">
+            <h4>Karachi University — BBA 5th Semester</h4>
+            <p><strong>${escapeHtml(subject.name)}</strong> (${subject.courseCode})</p>
+            <p>Mock Examination Paper · Time: 3 Hours · Total: ${tpl.marks} Marks</p>
+            <p style="font-size:0.8rem;color:#64748b">Generated ${date} · BBA 5th Sem Tracker</p>
+          </div>
+          <p><strong>Instructions:</strong> Attempt all questions. Write neat and to the point.</p>
+      `;
+
+      let qNum = 1;
+      const sections = [
+        { key: 'mcq', title: `Section A — Multiple Choice (${tpl.mcq} × 1 = ${tpl.mcq} marks)`, type: 'mcq', count: tpl.mcq, marks: 1 },
+        { key: 'short', title: `Section B — Short Questions`, type: 'short', count: tpl.short, marks: 5 },
+        { key: 'long', title: `Section C — Long Questions`, type: 'long', count: tpl.long, marks: 10 },
+        { key: 'numerical', title: `Section D — Numerical / Problems`, type: 'numerical', count: tpl.numerical, marks: 10 },
+        { key: 'writing', title: `Section E — Business Writing`, type: 'writing', count: tpl.writing, marks: 10 }
+      ];
+
+      sections.forEach(sec => {
+        if (!sec.count) return;
+        const topics = pickTopicsForPaper(subject, sec.type, sec.count);
+        html += `<div class="section-block"><h5>${sec.title}</h5><ol start="${qNum}">`;
+        topics.forEach(t => {
+          html += `<li>${escapeHtml(questionText(t, sec.type, sec.marks))}</li>`;
+          qNum++;
+        });
+        html += '</ol></div>';
+      });
+
+      html += `
+          <p style="margin-top:1.5rem;font-size:0.8rem;color:#64748b">
+            Tip: Paste this paper into Claude.ai for model answers and marking scheme.
+          </p>
+        </div>`;
+      return html;
+    }
+
+    function buildPaperAiPrompt(subject) {
+      const tpl = PAPER_TEMPLATES[subject.id] || PAPER_TEMPLATES.fa;
+      const important = subject.topics.filter(t => t.important).map(t => t.title).join('\n• ');
+      return `I am a Karachi University BBA 5th Semester student. Create a complete ${tpl.marks}-mark examination paper for ${subject.name} (${subject.courseCode}).
+
+Include:
+- ${tpl.mcq} MCQs (1 mark each)
+- ${tpl.short} short questions (5 marks each)
+- ${tpl.long} long questions (10 marks each)
+${tpl.numerical ? `- ${tpl.numerical} numerical problems (10 marks each)` : ''}
+${tpl.writing ? `- ${tpl.writing} writing tasks (memo/report/letter format)` : ''}
+
+Focus on these important syllabus topics:
+• ${important}
+
+Also provide:
+1. Marking scheme / answer key outline
+2. Time management guide (3 hour paper)
+3. 2 most likely questions for upcoming exam
+
+Format suitable for BBA level. Urdu/English mix explanations are fine.`;
+    }
+
+    function getHighFreqTopics(subject, limit = 5) {
+      return subject.topics
+        .map(t => ({ t, count: getPastCount(t.id) }))
+        .filter(x => x.count > 0)
+        .sort((a, b) => b.count - a.count)
+        .slice(0, limit);
+    }
+
+    function getDaysUntilExam(subjectId) {
+      const d = examDates[subjectId];
+      if (!d) return null;
+      const exam = new Date(d + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+    }
+
+    function openModal(title, bodyHtml, footerHtml) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = bodyHtml;
+      document.getElementById('modalFooter').innerHTML = footerHtml || '';
+      document.getElementById('modalOverlay').classList.add('open');
+      document.getElementById('modalOverlay').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.getElementById('modalOverlay').setAttribute('aria-hidden', 'true');
+      modalTopicId = null;
+    }
+
+    function openMockPaperModal(subject) {
+      openModal(
+        `Mock Paper — ${subject.name}`,
+        buildMockPaper(subject),
+        `<button type="button" class="btn btn-primary" id="btnRegenPaper">🔄 New paper</button>
+         <button type="button" class="btn" id="btnPrintPaper">🖨️ Print / Save PDF</button>
+         <button type="button" class="btn btn-copy" id="btnCopyPaperPrompt">📋 AI answer key prompt</button>`
+      );
+      document.getElementById('btnRegenPaper').onclick = () => openMockPaperModal(subject);
+      document.getElementById('btnPrintPaper').onclick = () => window.print();
+      document.getElementById('btnCopyPaperPrompt').onclick = () => {
+        navigator.clipboard.writeText(buildPaperAiPrompt(subject)).then(() => showToast('Paper + answer key prompt copied'));
+      };
+    }
+
+    function openFormulaModal(subject) {
+      const html = FORMULA_SHEETS[subject.id];
+      if (!html) {
+        showToast('Formula sheet available for FA, MATH & ECON only');
+        return;
+      }
+      openModal(
+        `Formula Sheet — ${subject.name}`,
+        `<div class="formula-sheet">${html}</div>`,
+        `<button type="button" class="btn" id="btnPrintFormula">🖨️ Print formula sheet</button>`
+      );
+      document.getElementById('btnPrintFormula').onclick = () => window.print();
+    }
+
+    function openPastPaperModal(topicId) {
+      modalTopicId = topicId;
+      const info = getTopicById(topicId);
+      if (!info) return;
+      const { topic } = info;
+      const logs = pastPapers[topicId] || [];
+      const logHtml = logs.length
+        ? `<ul class="past-log-list">${logs.map((e, i) =>
+            `<li>${e.term} ${e.year} <button type="button" class="btn btn-past" data-del="${i}">✕</button></li>`
+          ).join('')}</ul>`
+        : '<p class="past-log-list">No past paper entries yet. Add when this topic appeared in exam.</p>';
+
+      openModal(
+        `Past Paper Log`,
+        `<p><strong>${escapeHtml(topic.title)}</strong></p>
+         <p style="font-size:0.85rem;color:#64748b">Track which exams this topic came in — mock papers will prioritize these.</p>
+         ${logHtml}
+         <div class="past-form">
+           <select id="pastTerm"><option value="Mid">Midterm</option><option value="Final">Final</option></select>
+           <input type="number" id="pastYear" min="2015" max="2030" value="${new Date().getFullYear()}" placeholder="Year">
+           <button type="button" class="btn btn-primary" id="btnAddPast">+ Add</button>
+         </div>`,
+        ''
+      );
+      document.getElementById('btnAddPast').onclick = () => {
+        const year = parseInt(document.getElementById('pastYear').value, 10);
+        const term = document.getElementById('pastTerm').value;
+        if (!year) return;
+        if (!pastPapers[topicId]) pastPapers[topicId] = [];
+        const dup = pastPapers[topicId].some(e => e.year === year && e.term === term);
+        if (dup) { showToast('Already logged'); return; }
+        pastPapers[topicId].push({ year, term });
+        savePastPapers();
+        renderSubject(activeSubjectId, false);
+        openPastPaperModal(topicId);
+        showToast('Past paper logged');
+      };
+      document.querySelectorAll('[data-del]').forEach(btn => {
+        btn.onclick = () => {
+          const i = parseInt(btn.dataset.del, 10);
+          pastPapers[topicId].splice(i, 1);
+          if (!pastPapers[topicId].length) delete pastPapers[topicId];
+          savePastPapers();
+          renderSubject(activeSubjectId, false);
+          openPastPaperModal(topicId);
+        };
+      });
+    }
+
+    function renderToolsSection(subject) {
+      const days = getDaysUntilExam(subject.id);
+      let countdown = '<span class="countdown-badge">Set exam date ↓</span>';
+      if (days !== null) {
+        const cls = days <= 7 ? 'countdown-badge urgent' : 'countdown-badge';
+        if (days < 0) countdown = `<span class="${cls}">Exam passed ${Math.abs(days)}d ago</span>`;
+        else if (days === 0) countdown = `<span class="${cls}">Exam TODAY</span>`;
+        else countdown = `<span class="${cls}">${days} days to exam</span>`;
+      }
+
+      const highFreq = getHighFreqTopics(subject);
+      const highHtml = highFreq.length
+        ? `<div class="high-freq"><strong>🔥 High frequency (your past paper log):</strong><ul>${highFreq.map(
+            x => `<li>${escapeHtml(x.t.title)} (${x.count}×)</li>`
+          ).join('')}</ul></div>`
+        : '<div class="high-freq">Log past papers on topics (📋 Past button) to see high-frequency list here.</div>';
+
+      const hasFormula = !!FORMULA_SHEETS[subject.id];
+
+      document.getElementById('toolsSection').innerHTML = `
+        <h3>📝 Exam & paper tools</h3>
+        <div class="tools-grid">
+          <button type="button" class="btn btn-primary" id="btnMockPaper">📝 Generate mock paper</button>
+          ${hasFormula ? '<button type="button" class="btn" id="btnFormula">📐 Formula sheet</button>' : ''}
+          <button type="button" class="btn btn-copy" id="btnPaperAi">📋 Full paper AI prompt</button>
+        </div>
+        <div class="exam-date-row">
+          <label>Exam date:</label>
+          <input type="date" id="examDateInput" value="${examDates[subject.id] || ''}">
+          ${countdown}
+        </div>
+        ${highHtml}
+      `;
+
+      document.getElementById('btnMockPaper').onclick = () => openMockPaperModal(subject);
+      if (hasFormula) document.getElementById('btnFormula').onclick = () => openFormulaModal(subject);
+      document.getElementById('btnPaperAi').onclick = () => {
+        navigator.clipboard.writeText(buildPaperAiPrompt(subject)).then(() => showToast('Full paper prompt copied — paste in Claude.ai'));
+      };
+      document.getElementById('examDateInput').onchange = (e) => {
+        if (e.target.value) examDates[subject.id] = e.target.value;
+        else delete examDates[subject.id];
+        saveExamDates();
+        renderToolsSection(subject);
+      };
     }
 
     function isDone(topicId) {
@@ -1056,17 +1666,20 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       const freePdf = isFreePdfUrl(topic.pdf);
       const pdfBtnClass = freePdf ? 'btn btn-pdf btn-free' : 'btn btn-pdf';
       const pdfLabel = freePdf ? '📄 Free PDF' : '📄 PDF Notes';
+      const pastCount = getPastCount(topic.id);
+      const pastBadge = pastCount ? `<span class="past-badge">📋 ${pastCount}× paper</span>` : '';
 
       return `
         <article class="topic-card ${done ? 'done' : ''}" data-topic="${topic.id}">
           <input type="checkbox" class="topic-checkbox" ${done ? 'checked' : ''}
                  aria-label="Mark ${topic.title} as done">
           <div class="topic-body">
-            <div class="topic-title">${escapeHtml(topic.title)}</div>
+            <div class="topic-title">${escapeHtml(topic.title)}${pastBadge}</div>
             <div class="topic-tags">${tags.join('')}</div>
             <div class="topic-actions">
               <a class="btn btn-yt" href="${topic.yt}" target="_blank" rel="noopener">▶ YouTube</a>
               <a class="${pdfBtnClass}" href="${topic.pdf}" target="_blank" rel="noopener">${pdfLabel}</a>
+              <button type="button" class="btn btn-past" data-past="${topic.id}">📋 Past</button>
             </div>
           </div>
         </article>
@@ -1136,6 +1749,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
         }
 
         document.getElementById('topicsContainer').innerHTML = topicsHtml;
+        renderToolsSection(subject);
 
         const prompt = buildAiPrompt(subject);
         document.getElementById('aiSection').innerHTML = `
@@ -1179,6 +1793,9 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
         const id = card.dataset.topic;
         cb.addEventListener('change', () => toggleTopic(id));
       });
+      document.querySelectorAll('[data-past]').forEach(btn => {
+        btn.addEventListener('click', () => openPastPaperModal(btn.dataset.past));
+      });
     }
 
     function switchSubject(subjectId) {
@@ -1219,6 +1836,10 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
     });
 
     document.getElementById('overlay').addEventListener('click', closeSidebar);
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modalOverlay') closeModal();
+    });
 
     renderSidebar();
     updateSidebarProgress();
