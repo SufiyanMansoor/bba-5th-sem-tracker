@@ -3,98 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#0c1222">
   <meta name="description" content="KU BS(BBA) full 8-semester study tracker — syllabus, topics, mock papers, progress">
   <link rel="manifest" href="manifest.webmanifest">
   <title>BBA Full Program Tracker — KU 8 Semesters</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy: #0f172a;
-      --navy-light: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --green: #22c55e;
-      --green-bg: #f0fdf4;
-      --amber: #f59e0b;
+      --navy: #0c1222;
+      --navy-light: #151d32;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --gold: #c9a227;
+      --gold-light: #e8c96a;
+      --green: #059669;
+      --green-bg: #ecfdf5;
+      --amber: #d97706;
       --amber-bg: #fffbeb;
-      --bg: #f8fafc;
+      --bg: #f0f2f7;
+      --bg-pattern: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37,99,235,0.08), transparent),
+        linear-gradient(180deg, #f4f6fb 0%, #eef1f8 100%);
       --card: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --sidebar-width: 300px;
-      --transition: 0.25s ease;
+      --text: #0f172a;
+      --text-muted: #5c6b82;
+      --border: #e2e8f4;
+      --sidebar-width: 312px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(12,18,34,0.05);
+      --shadow-md: 0 8px 32px rgba(12,18,34,0.08);
+      --shadow-lg: 0 20px 50px rgba(12,18,34,0.12);
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     [data-theme="dark"] {
-      --navy: #0f172a;
-      --navy-light: #1e293b;
-      --bg: #0f172a;
-      --card: #1e293b;
+      --navy: #0a0f1a;
+      --navy-light: #121a2e;
+      --bg: #0a0f1a;
+      --bg-pattern: linear-gradient(180deg, #0a0f1a 0%, #0f1525 100%);
+      --card: #141c2e;
       --text: #f1f5f9;
       --text-muted: #94a3b8;
-      --border: #334155;
-      --green-bg: #14532d33;
+      --border: #2a3548;
+      --green-bg: #064e3b33;
       --amber-bg: #78350f33;
     }
 
-    [data-theme="dark"] .sidebar { background: #020617; }
-    [data-theme="dark"] .free-books { background: linear-gradient(135deg, #1e3a5f 0%, #14532d44 100%); border-color: #334155; }
-    [data-theme="dark"] .topic-card.done { background: #14532d33; border-color: #166534; }
+    [data-theme="dark"] .sidebar { background: linear-gradient(180deg, #060a14 0%, #0c1222 40%, #0f172a 100%); }
+    [data-theme="dark"] .free-books { background: linear-gradient(135deg, #1e3a5f44 0%, #14532d33 100%); border-color: #334155; }
+    [data-theme="dark"] .topic-card.done { background: #064e3b33; border-color: #047857; }
+    [data-theme="dark"] .main-topbar { background: var(--card); border-color: var(--border); }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
+      background: var(--bg-pattern);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.55;
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif; }
 
     .app {
       display: flex;
       min-height: 100vh;
     }
 
-    /* Sidebar */
+    /* Sidebar — enterprise */
     .sidebar {
       position: fixed;
       top: 0;
       left: 0;
       width: var(--sidebar-width);
       height: 100vh;
-      background: var(--navy);
+      background: linear-gradient(180deg, #0a0f1a 0%, #0c1222 35%, #111827 100%);
       color: #fff;
       display: flex;
       flex-direction: column;
       z-index: 100;
       transform: translateX(0);
       transition: transform var(--transition);
-      overflow-y: auto;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
     }
 
     .sidebar-header {
-      padding: 1.5rem 1.25rem 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 1.35rem 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(135deg, rgba(201,162,39,0.12) 0%, transparent 60%);
     }
 
     .sidebar-header h1 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .sidebar-header .university {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-top: 0.25rem;
+      font-size: 0.72rem;
+      color: var(--gold-light);
+      margin-top: 0.35rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .sidebar-header .brand-tag {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,162,39,0.35);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .sidebar-controls {
+      padding: 0.85rem 1rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 0;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar { width: 5px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
     }
 
     .overall-progress {
@@ -125,7 +179,7 @@
 
     .progress-ring-fill {
       fill: none;
-      stroke: var(--accent);
+      stroke: url(#ringGradient);
       stroke-width: 8;
       stroke-linecap: round;
       stroke-dasharray: 283;
@@ -156,18 +210,26 @@
     }
 
     .subject-nav {
-      flex: 1;
-      padding: 0.75rem 0;
+      padding: 0.5rem 0 0.75rem;
       list-style: none;
     }
 
-    .subject-nav li button {
+    .subject-nav .nav-section-label {
+      padding: 0.5rem 1.25rem 0.35rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .subject-nav li button.nav-course {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 0.35rem;
-      padding: 0.65rem 1.25rem;
+      padding: 0.7rem 1.25rem;
       background: none;
       border: none;
       color: #cbd5e1;
@@ -177,15 +239,15 @@
       font-family: inherit;
     }
 
-    .subject-nav li button:hover {
+    .subject-nav li button.nav-course:hover {
       background: rgba(255,255,255,0.06);
       color: #fff;
     }
 
-    .subject-nav li button.active {
-      background: rgba(59, 130, 246, 0.2);
+    .subject-nav li button.nav-course.active {
+      background: linear-gradient(90deg, rgba(37,99,235,0.22) 0%, transparent 100%);
       color: #fff;
-      border-left: 3px solid var(--accent);
+      border-left: 3px solid var(--gold);
       padding-left: calc(1.25rem - 3px);
     }
 
@@ -201,7 +263,7 @@
       line-height: 1.3;
     }
 
-    .subject-nav li button.active .subject-name { color: #bfdbfe; }
+    .subject-nav li button.nav-course.active .subject-name { color: #bfdbfe; }
 
     .mini-bar-wrap {
       width: 100%;
@@ -213,7 +275,7 @@
 
     .mini-bar {
       height: 100%;
-      background: var(--accent);
+      background: linear-gradient(90deg, var(--accent), #60a5fa);
       border-radius: 2px;
       width: 0%;
       transition: width 1s ease-out;
@@ -275,11 +337,52 @@
     .main {
       flex: 1;
       margin-left: var(--sidebar-width);
-      padding: 2rem 2.5rem 3rem;
+      padding: 0 2.5rem 3rem;
       min-height: 100vh;
     }
 
+    .main-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 0 1.25rem;
+      margin: 0 -0.25rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .main-topbar .brand-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: linear-gradient(135deg, #fefce8 0%, #fffbeb 100%);
+      border: 1px solid rgba(201,162,39,0.35);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    [data-theme="dark"] .main-topbar .brand-pill {
+      background: rgba(201,162,39,0.12);
+      color: var(--gold-light);
+    }
+
+    .main-topbar .topbar-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .main-topbar .topbar-sem {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
     .content-area {
+      padding-top: 0.25rem;
       opacity: 1;
       transition: opacity 0.3s ease;
     }
@@ -358,18 +461,20 @@
     .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      padding: 1.35rem 1.25rem;
       text-align: center;
       transition: box-shadow var(--transition), transform var(--transition);
+      box-shadow: var(--shadow-sm);
     }
 
     .stat-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
     }
 
     .stat-card .value {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2rem;
       font-weight: 700;
       color: var(--navy);
@@ -406,8 +511,9 @@
     .topic-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: var(--radius);
       padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
       display: grid;
       grid-template-columns: auto 1fr;
       gap: 1rem;
@@ -997,106 +1103,155 @@
     }
 
 
-    .subject-nav li.sem-picker-wrap {
-      padding: 0.65rem 1rem 0.5rem;
-      position: relative;
-      z-index: 60;
-    }
-
     .sem-picker-label {
-      font-size: 0.7rem;
+      font-size: 0.62rem;
       color: #94a3b8;
-      display: block;
-      margin-bottom: 0.4rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    .sem-dropdown { position: relative; margin-bottom: 0.5rem; }
-
-    .sem-dropdown-trigger {
+    .sem-picker-btn {
       width: 100%;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.55rem 0.75rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.1);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      padding: 0.7rem 0.85rem;
+      margin-bottom: 0.55rem;
+      border-radius: var(--radius);
+      border: 1px solid rgba(201,162,39,0.25);
+      background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(255,255,255,0.06) 100%);
       color: #fff;
       font-family: inherit;
-      font-size: 0.8rem;
-      line-height: 1.3;
-      text-align: left;
       cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
+      text-align: left;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .sem-dropdown-trigger:hover,
-    .sem-dropdown.open .sem-dropdown-trigger {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(59,130,246,0.55);
+    .sem-picker-btn:hover {
+      border-color: rgba(201,162,39,0.5);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
 
-    .sem-dropdown-chevron {
-      font-size: 0.65rem;
-      opacity: 0.7;
-      transition: transform 0.2s;
-      flex-shrink: 0;
+    .sem-picker-main {
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.35;
     }
 
-    .sem-dropdown.open .sem-dropdown-chevron { transform: rotate(180deg); }
+    .sem-picker-action {
+      font-size: 0.68rem;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
 
-    .sem-dropdown-menu {
-      list-style: none;
-      margin: 0;
-      padding: 0.35rem;
+    .sem-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+
+    .sem-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sem-modal-backdrop {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(100% + 6px);
-      background: #1e293b;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-      max-height: 240px;
-      overflow-y: auto;
-      z-index: 200;
-      display: none;
+      inset: 0;
+      background: rgba(12,18,34,0.65);
+      backdrop-filter: blur(4px);
     }
 
-    .sem-dropdown.open .sem-dropdown-menu { display: block; }
-
-    .sem-dropdown-menu li button {
+    .sem-modal-box {
+      position: relative;
       width: 100%;
-      padding: 0.5rem 0.65rem;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+
+    .sem-modal-box h3 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 0.35rem;
+    }
+
+    .sem-modal-box > p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .sem-modal-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .sem-modal-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .sem-modal-option:hover {
+      border-color: var(--accent);
+      background: #eff6ff;
+    }
+
+    .sem-modal-option.active {
+      border-color: var(--accent);
+      background: linear-gradient(90deg, #eff6ff 0%, #fff 100%);
+      font-weight: 600;
+      box-shadow: inset 3px 0 0 var(--gold);
+    }
+
+    .sem-modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 32px;
+      height: 32px;
       border: none;
       border-radius: 8px;
-      background: transparent;
-      color: #cbd5e1;
-      font-family: inherit;
-      font-size: 0.78rem;
-      text-align: left;
+      background: var(--bg);
+      font-size: 1.25rem;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      color: var(--text-muted);
+      line-height: 1;
     }
-
-    .sem-dropdown-menu li button:hover { background: rgba(255,255,255,0.08); color: #fff; }
-
-    .sem-dropdown-menu li button.active {
-      background: rgba(59,130,246,0.25);
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .subject-nav li.sem-overview-item { padding: 0 1rem 0.65rem; }
 
     .student-benefits {
-      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 50%, #fefce8 100%);
+      border: 1px solid rgba(201,162,39,0.2);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       padding: 1.15rem 1.25rem;
       margin-bottom: 1.25rem;
     }
@@ -1152,18 +1307,22 @@
     .sem-overview-btn {
       width: 100%;
       padding: 0.55rem 0.75rem;
-      background: rgba(59,130,246,0.22);
-      border: 1px solid rgba(59,130,246,0.45);
-      color: #fff;
-      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #e2e8f0;
+      border-radius: var(--radius);
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 500;
-      transition: background 0.2s;
+      transition: background 0.2s, border-color 0.2s;
     }
 
-    .sem-overview-btn:hover { background: rgba(59,130,246,0.35); }
+    .sem-overview-btn:hover {
+      background: rgba(37,99,235,0.2);
+      border-color: rgba(37,99,235,0.4);
+      color: #fff;
+    }
 
     .sem-tip { color: var(--text-muted); margin: 0.5rem 0 1rem; font-size: 0.9rem; }
 
@@ -1189,14 +1348,19 @@
       text-align: left;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
+      border-radius: var(--radius-lg);
+      padding: 1.15rem;
       cursor: pointer;
-      transition: box-shadow var(--transition), border-color var(--transition);
+      transition: box-shadow var(--transition), border-color var(--transition), transform 0.2s;
       font-family: inherit;
+      box-shadow: var(--shadow-sm);
     }
 
-    .course-card:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(59,130,246,0.12); }
+    .course-card:hover {
+      border-color: rgba(37,99,235,0.35);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
 
     .course-card-code { font-family: Outfit, sans-serif; font-weight: 700; color: var(--accent); display: block; }
     .course-card-name { font-size: 0.85rem; color: var(--navy); display: block; margin: 0.35rem 0; line-height: 1.3; }
@@ -1425,12 +1589,19 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h1>BBA Full Program</h1>
-        <p class="university">Karachi University</p>
+        <p class="university">Karachi University · KUBS</p>
+        <span class="brand-tag">Enterprise Edition</span>
       </div>
 
       <div class="overall-progress">
         <div class="progress-ring-wrap">
           <svg viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c9a227"/>
+                <stop offset="100%" stop-color="#2563eb"/>
+              </linearGradient>
+            </defs>
             <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
             <circle class="progress-ring-fill" id="overallRing" cx="50" cy="50" r="45"/>
           </svg>
@@ -1442,7 +1613,12 @@
         </div>
       </div>
 
-      <ul class="subject-nav" id="subjectNav"></ul>
+      <div class="sidebar-controls" id="sidebarControls"></div>
+
+      <div class="sidebar-scroll">
+        <ul class="subject-nav" id="subjectNav"></ul>
+      </div>
+
       <div class="sidebar-smart">
         <div class="streak-box">🔥 <span id="streakCount">0</span> day streak</div>
         <button type="button" class="btn" id="btnSmartHub">⚡ Smart Hub</button>
@@ -1452,6 +1628,13 @@
     </aside>
 
     <main class="main">
+      <header class="main-topbar">
+        <div>
+          <span class="brand-pill">KU BS(BBA)</span>
+          <div class="topbar-title">Academic Command Center</div>
+          <div class="topbar-sem" id="topbarSemLabel">—</div>
+        </div>
+      </header>
       <div id="smartHubPanel"></div>
       <div class="content-area" id="contentArea">
         <header class="subject-header" id="subjectHeader"></header>
@@ -1461,6 +1644,16 @@
         <section class="ai-section" id="aiSection"></section>
       </div>
     </main>
+  </div>
+
+  <div class="sem-modal" id="semModal" aria-hidden="true">
+    <div class="sem-modal-backdrop" id="semModalBackdrop"></div>
+    <div class="sem-modal-box" role="dialog" aria-labelledby="semModalTitle">
+      <button type="button" class="sem-modal-close" id="semModalClose" aria-label="Close">&times;</button>
+      <h3 id="semModalTitle">Select your semester</h3>
+      <p>8 semesters · 48 courses — apna current semester choose karein</p>
+      <div class="sem-modal-grid" id="semModalGrid"></div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -1633,6 +1826,7 @@
       localStorage.setItem(CURRENT_SEM_KEY, semId);
       syncSubjects();
       viewMode = 'semester';
+      renderSemControls();
       renderSidebar();
       renderSemesterDashboard();
       updateSidebarProgress();
@@ -1654,32 +1848,53 @@
         </div>`;
     }
 
-    function bindSemDropdown() {
-      const wrap = document.getElementById('semDropdown');
-      if (!wrap) return;
-      const trigger = document.getElementById('semDropdownTrigger');
-      trigger.onclick = e => {
-        e.stopPropagation();
-        const open = wrap.classList.toggle('open');
-        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      };
-      wrap.querySelectorAll('[data-sem]').forEach(btn => {
-        btn.onclick = e => {
-          e.stopPropagation();
+    function closeSemesterModal() {
+      const modal = document.getElementById('semModal');
+      if (modal) {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    function openSemesterModal() {
+      const modal = document.getElementById('semModal');
+      const grid = document.getElementById('semModalGrid');
+      if (!modal || !grid) return;
+      grid.innerHTML = BBA_PROGRAM.semesters.map(s =>
+        `<button type="button" class="sem-modal-option ${s.id === activeSemesterId ? 'active' : ''}" data-sem="${s.id}">${escapeHtml(s.label)}</button>`
+      ).join('');
+      grid.querySelectorAll('[data-sem]').forEach(btn => {
+        btn.onclick = () => {
+          closeSemesterModal();
           switchSemester(btn.dataset.sem);
         };
       });
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
     }
 
-    if (!window._semDropdownDocBound) {
-      window._semDropdownDocBound = true;
-      document.addEventListener('click', () => {
-        document.querySelectorAll('.sem-dropdown.open').forEach(d => {
-          d.classList.remove('open');
-          const t = d.querySelector('.sem-dropdown-trigger');
-          if (t) t.setAttribute('aria-expanded', 'false');
-        });
-      });
+    function renderSemControls() {
+      const el = document.getElementById('sidebarControls');
+      if (!el) return;
+      const currentSem = getSemester(activeSemesterId);
+      el.innerHTML = `
+        <p class="sem-picker-label">Current semester</p>
+        <button type="button" class="sem-picker-btn" id="semPickerBtn">
+          <span class="sem-picker-main">${escapeHtml(currentSem.label)}</span>
+          <span class="sem-picker-action">Tap to change semester</span>
+        </button>
+        <button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button>
+      `;
+      document.getElementById('semPickerBtn').onclick = openSemesterModal;
+      document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
+      const top = document.getElementById('topbarSemLabel');
+      if (top) top.textContent = currentSem.label;
+    }
+
+    if (!window._semModalBound) {
+      window._semModalBound = true;
+      document.getElementById('semModalBackdrop')?.addEventListener('click', closeSemesterModal);
+      document.getElementById('semModalClose')?.addEventListener('click', closeSemesterModal);
     }
 
     function renderSemesterDashboard() {
@@ -2529,33 +2744,19 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
 
     function renderSidebar() {
       const nav = document.getElementById('subjectNav');
-      const currentSem = getSemester(activeSemesterId);
-      let html = `<li class="sem-picker-wrap">
-        <label class="sem-picker-label" for="semDropdownTrigger">My semester</label>
-        <div class="sem-dropdown" id="semDropdown">
-          <button type="button" class="sem-dropdown-trigger" id="semDropdownTrigger" aria-expanded="false" aria-haspopup="listbox">
-            <span>${escapeHtml(currentSem.label)}</span>
-            <span class="sem-dropdown-chevron" aria-hidden="true">▼</span>
-          </button>
-          <ul class="sem-dropdown-menu" role="listbox">`;
-      BBA_PROGRAM.semesters.forEach(s => {
-        html += `<li><button type="button" role="option" data-sem="${s.id}" class="${s.id === activeSemesterId ? 'active' : ''}">${escapeHtml(s.label)}</button></li>`;
-      });
-      html += `</ul></div></li>
-        <li class="sem-overview-item"><button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button></li>`;
+      let html = '<li class="nav-section-label">This semester · subjects</li>';
       html += SUBJECTS.map(s => {
         const semPct = getSubjectPct(s);
-        return `<li><button type="button" data-subject="${s.id}" class="${s.id === activeSubjectId && viewMode === 'course' ? 'active' : ''}">
+        const activeCls = s.id === activeSubjectId && viewMode === 'course' ? 'active' : '';
+        return `<li><button type="button" class="nav-course ${activeCls}" data-subject="${s.id}">
             <span class="subject-code">${s.code}</span>
-            <span class="subject-name">${s.name}</span>
+            <span class="subject-name">${escapeHtml(s.name)}</span>
             <div class="mini-bar-wrap"><div class="mini-bar" data-bar="${s.id}"></div></div>
             <span class="mini-pct" data-pct="${s.id}">${semPct}%</span>
           </button></li>`;
       }).join('');
 
       nav.innerHTML = html;
-      bindSemDropdown();
-      document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
       nav.querySelectorAll('[data-subject]').forEach(btn => {
         btn.addEventListener('click', () => { viewMode = 'course'; switchSubject(btn.dataset.subject); closeSidebar(); });
       });
@@ -2793,6 +2994,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       renderToolsSection
     };
 
+    renderSemControls();
     renderSidebar();
     updateSidebarProgress();
     requestAnimationFrame(() => {
