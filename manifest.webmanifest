@@ -1,6 +1,6 @@
 {
-  "name": "KU BBA Full Program Tracker",
-  "short_name": "BBA KU",
+  "name": "BBA All Semesters — KU",
+  "short_name": "BBA All Sem",
   "description": "Karachi University BS(BBA) 8-semester syllabus & exam prep tracker",
   "start_url": "./index.html",
   "display": "standalone",

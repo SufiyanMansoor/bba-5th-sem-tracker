@@ -1,12 +1,12 @@
-# KU BBA Full Program Tracker
+# BBA All Semesters — KU Tracker
 
 **Karachi University BS(BBA) — 8 semesters · 48 courses · exam prep & progress tracking**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Site-GitHub%20Pages-3b82f6?style=for-the-badge)](https://sufiyanmansoor.github.io/bba-5th-sem-tracker/)
+[![Live Demo](https://img.shields.io/badge/Live%20Site-GitHub%20Pages-3b82f6?style=for-the-badge)](https://sufiyanmansoor.github.io/bba-all-semesters/)
 
 ## Live link
 
-**https://sufiyanmansoor.github.io/bba-5th-sem-tracker/**
+**https://sufiyanmansoor.github.io/bba-all-semesters/**
 
 Mobile par bhi chalta hai — browser se open karein ya **Add to Home Screen** (PWA).
 

@@ -1,4 +1,4 @@
-/* BBA 5th Sem Tracker — extended smart features */
+/* BBA All Semesters — extended smart features */
 (function () {
   const SMART_KEY = 'bba5_smart_v1';
   const GUESS_IDS = [
@@ -142,7 +142,7 @@
     const pct = A().getOverallPct();
     const url = location.href.split('#')[0];
     const text = encodeURIComponent(
-      `BBA 5th Sem study progress: ${pct}% complete!\n${url}`
+      `BBA All Semesters — study progress: ${pct}% complete!\n${url}`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   }
@@ -414,9 +414,9 @@
     A().SUBJECTS.forEach(s => {
       const days = A().getDaysUntilExam(s.id);
       if (days !== null && days >= 0 && days <= 7) {
-        new Notification('BBA 5th Sem Exam Soon', {
+        new Notification('BBA All Semesters — Exam Soon', {
           body: `${s.name} exam in ${days} day(s)!`,
-          icon: 'https://sufiyanmansoor.github.io/bba-5th-sem-tracker/favicon.ico'
+          icon: 'https://sufiyanmansoor.github.io/bba-all-semesters/favicon.ico'
         });
       }
     });

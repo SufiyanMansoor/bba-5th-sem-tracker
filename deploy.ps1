@@ -1,8 +1,8 @@
-# BBA 5th Sem Tracker — GitHub + Pages deploy
+# BBA All Semesters — GitHub + Pages deploy
 # Run: .\deploy.ps1
 
 $ErrorActionPreference = "Stop"
-$RepoName = "bba-5th-sem-tracker"
+$RepoName = "bba-all-semesters"
 
 Set-Location $PSScriptRoot
 
@@ -20,7 +20,7 @@ Write-Host "Deploying to github.com/$full ..." -ForegroundColor Cyan
 gh repo view $full 2>$null | Out-Null
 if ($LASTEXITCODE -ne 0) {
     gh repo create $RepoName --public --source=. --remote=origin --push `
-        --description "BBA 5th Semester Smart Study Tracker - Karachi University"
+        --description "BBA All Semesters — KU BS(BBA) 8-semester study tracker"
 } else {
     $hasOrigin = git remote get-url origin 2>$null
     if (-not $hasOrigin) {
