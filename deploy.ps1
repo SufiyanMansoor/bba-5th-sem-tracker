@@ -12,7 +12,7 @@ if ($LASTEXITCODE -ne 0) {
     gh auth login --web --git-protocol https
 }
 
-$owner = gh api user -q login
+$owner = gh api user --jq .login
 $full = "$owner/$RepoName"
 
 Write-Host "Deploying to github.com/$full ..." -ForegroundColor Cyan
