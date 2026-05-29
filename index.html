@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBA 5th Sem Tracker — Karachi University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --green: #22c55e;
+      --green-bg: #f0fdf4;
+      --amber: #f59e0b;
+      --amber-bg: #fffbeb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-width: 280px;
+      --transition: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transform: translateX(0);
+      transition: transform var(--transition);
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-header .university {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+
+    .overall-progress {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .progress-ring-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+
+    .progress-ring-wrap svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .progress-ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 8;
+    }
+
+    .progress-ring-fill {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1s ease-out;
+    }
+
+    .progress-ring-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-ring-text .pct {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .progress-ring-text .label {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .subject-nav {
+      flex: 1;
+      padding: 0.75rem 0;
+      list-style: none;
+    }
+
+    .subject-nav li button {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      padding: 0.65rem 1.25rem;
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      cursor: pointer;
+      text-align: left;
+      transition: background var(--transition), color var(--transition);
+      font-family: inherit;
+    }
+
+    .subject-nav li button:hover {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
+
+    .subject-nav li button.active {
+      background: rgba(59, 130, 246, 0.2);
+      color: #fff;
+      border-left: 3px solid var(--accent);
+      padding-left: calc(1.25rem - 3px);
+    }
+
+    .subject-code {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .subject-name {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    .subject-nav li button.active .subject-name { color: #bfdbfe; }
+
+    .mini-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+
+    .mini-pct {
+      font-size: 0.65rem;
+      color: #64748b;
+      align-self: flex-end;
+    }
+
+    /* Mobile menu */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 10px;
+      background: var(--navy);
+      color: #fff;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background var(--transition);
+    }
+
+    .menu-toggle:hover { background: var(--navy-light); }
+
+    .menu-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      margin: 4px auto;
+      transition: var(--transition);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 90;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .overlay.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 2rem 2.5rem 3rem;
+      min-height: 100vh;
+    }
+
+    .content-area {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .content-area.fading { opacity: 0; }
+
+    .subject-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .subject-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .subject-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .subject-meta span {
+      background: var(--card);
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .stat-card .value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .stat-card .value.done { color: var(--green); }
+    .stat-card .value.remaining { color: var(--amber); }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .section-title:first-of-type { margin-top: 0; }
+
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .topic-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      align-items: start;
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .topic-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .topic-card.done {
+      background: var(--green-bg);
+      border-color: #bbf7d0;
+    }
+
+    .topic-checkbox {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      accent-color: var(--green);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .topic-checkbox:hover { transform: scale(1.1); }
+
+    .topic-body { min-width: 0; }
+
+    .topic-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--navy);
+      transition: color var(--transition);
+    }
+
+    .topic-card.done .topic-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .topic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+
+    .tag-important {
+      background: var(--amber-bg);
+      color: #b45309;
+    }
+
+    .tag-type {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .topic-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition), border-color var(--transition), color var(--transition), transform 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--bg);
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+
+    .btn-yt:hover {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+
+    .btn-pdf:hover {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: var(--accent);
+    }
+
+    /* AI Prompt */
+    .ai-section {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 2px dashed var(--border);
+    }
+
+    .ai-section h3 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .ai-section p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .prompt-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .ai-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      color: #fff;
+    }
+
+    .btn-copy.copied {
+      background: var(--green-bg);
+      border-color: var(--green);
+      color: #15803d;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--navy);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 300;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; flex-direction: column; }
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .main {
+        margin-left: 0;
+        padding: 5rem 1.25rem 2rem;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>BBA 5th Sem Tracker</h1>
+        <p class="university">Karachi University</p>
+      </div>
+
+      <div class="overall-progress">
+        <div class="progress-ring-wrap">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="progress-ring-bg" cx="50" cy="50" r="45"/>
+            <circle class="progress-ring-fill" id="overallRing" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="progress-ring-text">
+            <span class="pct" id="overallPct">0%</span>
+            <span class="label">Overall</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="subject-nav" id="subjectNav"></ul>
+    </aside>
+
+    <main class="main">
+      <div class="content-area" id="contentArea">
+        <header class="subject-header" id="subjectHeader"></header>
+        <div class="stats-row" id="statsRow"></div>
+        <div id="topicsContainer"></div>
+        <section class="ai-section" id="aiSection"></section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = 'bba5_progress_v2';
+    const CIRCUMFERENCE = 2 * Math.PI * 45;
+
+    const TYPE_MAP = { theory: 'concept', calculation: 'calculation', writing: 'writing' };
+
+    const SUBJECTS = [
+      {
+        id: 'fa',
+        code: 'FA',
+        name: 'Financial Accounting',
+        courseCode: 'BA-BS-501',
+        credits: 3,
+        topics: [
+          { id: 'fa-1', title: 'IAS & Financial Statement Principles', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=IAS+financial+statements+explained+urdu',
+            pdf: 'https://www.google.com/search?q=IAS+financial+statements+PDF+notes+BBA' },
+          { id: 'fa-2', title: 'Financial Statement Analysis Framework', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=financial+statement+analysis+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=financial+statement+analysis+framework+PDF' },
+          { id: 'fa-3', title: 'Financial Reporting Mechanics & Accruals', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=accounting+accruals+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=financial+reporting+mechanics+accruals+PDF+notes' },
+          { id: 'fa-4', title: 'Financial Reporting Standards — IFRS vs GAAP', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=IFRS+vs+GAAP+urdu+explained',
+            pdf: 'https://www.google.com/search?q=IFRS+GAAP+comparison+PDF+notes+BBA' },
+          { id: 'fa-5', title: 'Income Statement — Revenue & Expense Recognition', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=income+statement+revenue+recognition+urdu',
+            pdf: 'https://www.google.com/search?q=income+statement+components+PDF+BBA+notes' },
+          { id: 'fa-6', title: 'Balance Sheet — Assets, Liabilities & Equity', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=balance+sheet+urdu+lecture+BBA',
+            pdf: 'https://www.google.com/search?q=balance+sheet+assets+liabilities+PDF+notes' },
+          { id: 'fa-7', title: 'Cash Flow Statement — Direct & Indirect Method', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=cash+flow+statement+direct+indirect+urdu',
+            pdf: 'https://www.google.com/search?q=cash+flow+statement+PDF+notes+BBA' },
+          { id: 'fa-8', title: 'Inventory Accounting — FIFO, LIFO, Weighted Average', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=FIFO+LIFO+inventory+accounting+urdu',
+            pdf: 'https://www.google.com/search?q=FIFO+LIFO+inventory+accounting+PDF+notes' },
+          { id: 'fa-9', title: 'Current & Long-Term Liabilities — Bonds', type: 'calculation', important: false,
+            yt: 'https://www.youtube.com/results?search_query=bonds+liabilities+accounting+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=bonds+long+term+liabilities+accounting+PDF' },
+          { id: 'fa-10', title: 'Stockholders Equity, EPS & Dividends', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=stockholders+equity+EPS+dividends+urdu',
+            pdf: 'https://www.google.com/search?q=stockholders+equity+EPS+dividends+PDF+notes+BBA' }
+        ]
+      },
+      {
+        id: 'math',
+        code: 'MATH',
+        name: 'Basic Mathematics',
+        courseCode: 'BA-BS-511',
+        credits: 3,
+        topics: [
+          { id: 'math-1', title: 'Algebra, Ratios, Proportions & Percentages', type: 'calculation', important: false,
+            yt: 'https://www.youtube.com/results?search_query=basic+algebra+ratios+percentages+urdu+business+math',
+            pdf: 'https://www.google.com/search?q=basic+algebra+ratios+percentages+BBA+PDF+notes' },
+          { id: 'math-2', title: 'Sequences, Series & Business Applications', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=arithmetic+geometric+sequence+series+business+urdu',
+            pdf: 'https://www.google.com/search?q=sequence+series+business+application+PDF+notes' },
+          { id: 'math-3', title: 'Linear Equations, Inequalities & Simultaneous Equations', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=linear+equations+simultaneous+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=linear+equations+simultaneous+PDF+business+math' },
+          { id: 'math-4', title: 'Break-Even Analysis', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=break+even+analysis+urdu+lecture+business',
+            pdf: 'https://www.google.com/search?q=break+even+analysis+formula+PDF+notes+BBA' },
+          { id: 'math-5', title: 'Functions — Linear, Quadratic, Rational, Exponential', type: 'calculation', important: false,
+            yt: 'https://www.youtube.com/results?search_query=functions+types+business+math+urdu',
+            pdf: 'https://www.google.com/search?q=types+of+functions+business+math+PDF+notes' },
+          { id: 'math-6', title: 'Matrix Algebra — Types, Operations & Determinant', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=matrix+algebra+determinant+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=matrix+algebra+operations+determinant+PDF+notes' },
+          { id: 'math-7', title: 'Differentiation — Rules & Rate of Change', type: 'calculation', important: false,
+            yt: 'https://www.youtube.com/results?search_query=differentiation+rules+business+math+urdu',
+            pdf: 'https://www.google.com/search?q=differentiation+rules+rate+of+change+PDF+notes' },
+          { id: 'math-8', title: 'Simple & Compound Interest', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=simple+compound+interest+urdu+business+math',
+            pdf: 'https://www.google.com/search?q=simple+compound+interest+formula+PDF+BBA' },
+          { id: 'math-9', title: 'Annuities — Present Value & Future Value', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=annuity+present+future+value+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=annuity+present+value+future+value+PDF+notes' }
+        ]
+      },
+      {
+        id: 'econ',
+        code: 'ECON',
+        name: 'Micro Economics',
+        courseCode: 'BA-BS-521',
+        credits: 3,
+        topics: [
+          { id: 'econ-1', title: 'Demand & Supply Analysis — Equilibrium & Shifts', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=demand+supply+equilibrium+urdu+microeconomics',
+            pdf: 'https://www.google.com/search?q=demand+supply+analysis+equilibrium+PDF+notes+BBA' },
+          { id: 'econ-2', title: 'Price, Income & Cross Elasticity of Demand', type: 'calculation', important: true,
+            yt: 'https://www.youtube.com/results?search_query=price+income+cross+elasticity+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=elasticity+of+demand+types+formula+PDF+notes' },
+          { id: 'econ-3', title: 'Consumer & Producer Surplus', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=consumer+producer+surplus+urdu+microeconomics',
+            pdf: 'https://www.google.com/search?q=consumer+producer+surplus+PDF+microeconomics+notes' },
+          { id: 'econ-4', title: 'Efficiency, Resource Allocation & Marginal Benefits', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=efficiency+resource+allocation+microeconomics+urdu',
+            pdf: 'https://www.google.com/search?q=efficiency+resource+allocation+microeconomics+PDF' },
+          { id: 'econ-5', title: 'Output, Short-Run & Long-Run Costs', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=short+run+long+run+costs+production+urdu',
+            pdf: 'https://www.google.com/search?q=short+run+long+run+cost+output+PDF+microeconomics' },
+          { id: 'econ-6', title: 'Perfect Competition — Firm & Market', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=perfect+competition+urdu+lecture+microeconomics',
+            pdf: 'https://www.google.com/search?q=perfect+competition+microeconomics+PDF+notes' },
+          { id: 'econ-7', title: 'Monopoly — Pricing & Output Decisions', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=monopoly+pricing+output+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=monopoly+pricing+output+decisions+PDF+notes' },
+          { id: 'econ-8', title: 'Monopolistic Competition & Oligopoly', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=monopolistic+competition+oligopoly+urdu',
+            pdf: 'https://www.google.com/search?q=monopolistic+competition+oligopoly+PDF+notes+BBA' },
+          { id: 'econ-9', title: 'Economics of Regulation & Antitrust Policy', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=economics+regulation+antitrust+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=economics+of+regulation+antitrust+PDF+notes' }
+        ]
+      },
+      {
+        id: 'mgt',
+        code: 'MGT',
+        name: 'Principles of Management',
+        courseCode: 'BA-BS-531',
+        credits: 3,
+        topics: [
+          { id: 'mgt-1', title: 'Introduction to Management & Modern Challenges', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=introduction+management+principles+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=principles+of+management+introduction+PDF+notes+BBA' },
+          { id: 'mgt-2', title: 'CSR, Business Ethics & Managing Globally', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=CSR+business+ethics+management+urdu',
+            pdf: 'https://www.google.com/search?q=CSR+business+ethics+management+PDF+notes' },
+          { id: 'mgt-3', title: 'Planning — Principles, Decisions & Strategic Planning', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=planning+management+strategic+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=planning+management+principles+strategic+PDF+notes' },
+          { id: 'mgt-4', title: 'Organizing — Structure, Departments & Delegation', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=organizing+management+structure+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=organizing+management+departmentalization+PDF+notes' },
+          { id: 'mgt-5', title: 'Leadership — All Major Theories (Situational, Path-Goal, Transformational…)', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=leadership+theories+situational+path+goal+urdu',
+            pdf: 'https://www.google.com/search?q=leadership+theories+management+PDF+notes+BBA' },
+          { id: 'mgt-6', title: 'Motivation — Maslow, Vroom, McClelland, Equity Theory', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=motivation+theories+Maslow+Vroom+McClelland+urdu',
+            pdf: 'https://www.google.com/search?q=motivation+theories+Maslow+Vroom+McClelland+PDF+notes' },
+          { id: 'mgt-7', title: 'Controlling — Process, Budgets & Information Technology', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=controlling+management+budget+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=controlling+management+process+budget+PDF+notes' }
+        ]
+      },
+      {
+        id: 'mkt',
+        code: 'MKT',
+        name: 'Principles of Marketing',
+        courseCode: 'BA-BS-541',
+        credits: 3,
+        topics: [
+          { id: 'mkt-1', title: 'Marketing Concepts & Management Philosophies', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=marketing+concepts+management+philosophies+urdu',
+            pdf: 'https://www.google.com/search?q=marketing+concepts+management+philosophies+PDF+notes+BBA' },
+          { id: 'mkt-2', title: 'Marketing Strategy & the Marketing Process', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=marketing+strategy+process+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=marketing+strategy+process+PDF+notes' },
+          { id: 'mkt-3', title: 'Marketing Environment — Micro & Macro', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=marketing+environment+micro+macro+urdu',
+            pdf: 'https://www.google.com/search?q=marketing+environment+micro+macro+PDF+notes+BBA' },
+          { id: 'mkt-4', title: 'Consumer Buying Behavior & Decision Process', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=consumer+buying+behavior+decision+process+urdu',
+            pdf: 'https://www.google.com/search?q=consumer+buying+behavior+PDF+notes+BBA' },
+          { id: 'mkt-5', title: 'Market Segmentation, Targeting & Positioning — STP', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=STP+segmentation+targeting+positioning+urdu',
+            pdf: 'https://www.google.com/search?q=STP+market+segmentation+targeting+positioning+PDF+notes' },
+          { id: 'mkt-6', title: 'Product, Branding & Services Strategies', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=product+branding+strategies+urdu+marketing',
+            pdf: 'https://www.google.com/search?q=product+branding+strategies+marketing+PDF+notes' },
+          { id: 'mkt-7', title: 'New Product Development & Product Life Cycle', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=product+life+cycle+stages+urdu+marketing',
+            pdf: 'https://www.google.com/search?q=product+life+cycle+new+product+development+PDF+notes' },
+          { id: 'mkt-8', title: 'Pricing Strategies — Approaches & Adjustments', type: 'theory', important: true,
+            yt: 'https://www.youtube.com/results?search_query=pricing+strategies+approaches+urdu+marketing',
+            pdf: 'https://www.google.com/search?q=pricing+strategies+marketing+PDF+notes+BBA' },
+          { id: 'mkt-9', title: 'Marketing Channels — Retail, Wholesale & Transport', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=marketing+channels+distribution+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=marketing+channels+distribution+PDF+notes' },
+          { id: 'mkt-10', title: 'Integrated Marketing Communication (IMC) & Promotion Mix', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=integrated+marketing+communication+IMC+urdu',
+            pdf: 'https://www.google.com/search?q=integrated+marketing+communication+IMC+PDF+notes' }
+        ]
+      },
+      {
+        id: 'comm',
+        code: 'COMM',
+        name: 'Business Communication',
+        courseCode: 'BA-BS-551',
+        credits: 3,
+        topics: [
+          { id: 'comm-1', title: 'Communication at Work — Networks, Barriers & Process', type: 'theory', important: false,
+            yt: 'https://www.youtube.com/results?search_query=business+communication+process+barriers+urdu',
+            pdf: 'https://www.google.com/search?q=business+communication+networks+barriers+PDF+notes+BBA' },
+          { id: 'comm-2', title: 'Writing Business Messages — Principles & Planning', type: 'writing', important: true,
+            yt: 'https://www.youtube.com/results?search_query=business+message+writing+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=business+message+writing+principles+PDF+notes' },
+          { id: 'comm-3', title: 'Business Reports — Formal & Informal, Documentation', type: 'writing', important: true,
+            yt: 'https://www.youtube.com/results?search_query=business+report+writing+formal+informal+urdu',
+            pdf: 'https://www.google.com/search?q=business+report+writing+formal+informal+PDF+notes' },
+          { id: 'comm-4', title: 'Memo Format & Business Document Layout', type: 'writing', important: true,
+            yt: 'https://www.youtube.com/results?search_query=memo+format+business+document+urdu+lecture',
+            pdf: 'https://www.google.com/search?q=memo+format+business+document+layout+PDF+notes' },
+          { id: 'comm-5', title: 'Routine, Goodwill & Direct Request Messages', type: 'writing', important: false,
+            yt: 'https://www.youtube.com/results?search_query=routine+goodwill+messages+business+communication+urdu',
+            pdf: 'https://www.google.com/search?q=routine+goodwill+messages+business+communication+PDF' },
+          { id: 'comm-6', title: 'Bad News & Persuasive Messages Strategies', type: 'writing', important: false,
+            yt: 'https://www.youtube.com/results?search_query=bad+news+persuasive+messages+business+urdu',
+            pdf: 'https://www.google.com/search?q=bad+news+persuasive+messages+business+communication+PDF' },
+          { id: 'comm-7', title: 'Resume Writing & Application Letters', type: 'writing', important: true,
+            yt: 'https://www.youtube.com/results?search_query=resume+writing+application+letter+urdu+business',
+            pdf: 'https://www.google.com/search?q=resume+writing+application+letter+PDF+notes+BBA' }
+        ]
+      }
+    ];
+
+    let progress = loadProgress();
+    let activeSubjectId = SUBJECTS[0].id;
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function isDone(topicId) {
+      return !!progress[topicId];
+    }
+
+    function toggleTopic(topicId) {
+      if (progress[topicId]) {
+        delete progress[topicId];
+      } else {
+        progress[topicId] = true;
+      }
+      saveProgress();
+      updateSidebarProgress();
+      renderSubject(activeSubjectId, false);
+    }
+
+    function getTotalTopics() {
+      return SUBJECTS.reduce((sum, s) => sum + s.topics.length, 0);
+    }
+
+    function getDoneCount(topics) {
+      return topics.filter(t => isDone(t.id)).length;
+    }
+
+    function getSubjectPct(subject) {
+      const total = subject.topics.length;
+      if (!total) return 0;
+      return Math.round((getDoneCount(subject.topics) / total) * 100);
+    }
+
+    function getOverallPct() {
+      const total = getTotalTopics();
+      if (!total) return 0;
+      const done = SUBJECTS.reduce((sum, s) => sum + getDoneCount(s.topics), 0);
+      return Math.round((done / total) * 100);
+    }
+
+    function updateSidebarProgress() {
+      const pct = getOverallPct();
+      document.getElementById('overallPct').textContent = pct + '%';
+      const ring = document.getElementById('overallRing');
+      ring.style.strokeDasharray = CIRCUMFERENCE;
+      ring.style.strokeDashoffset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+
+      SUBJECTS.forEach(subject => {
+        const bar = document.querySelector(`[data-bar="${subject.id}"]`);
+        const label = document.querySelector(`[data-pct="${subject.id}"]`);
+        const sp = getSubjectPct(subject);
+        if (bar) bar.style.width = sp + '%';
+        if (label) label.textContent = sp + '%';
+      });
+    }
+
+    function buildAiPrompt(subject) {
+      const pending = subject.topics.filter(t => !isDone(t.id));
+      const important = pending.filter(t => t.important);
+      const topicList = (important.length ? important : pending)
+        .slice(0, 8)
+        .map(t => `• ${t.title}`)
+        .join('\n');
+
+      return `I'm a Karachi University BBA 5th Semester student preparing for exams in ${subject.name} (${subject.courseCode}).
+
+Please help me study these topics with clear explanations, key points, and practice questions suitable for a BBA exam:
+
+${topicList || '• All topics in this subject — give me a full revision overview'}
+
+Focus on:
+1. Simple explanations (Urdu/English mix is fine)
+2. Important formulas or definitions where applicable
+3. Likely exam questions and short answers
+4. Memory tricks for key concepts
+
+My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics completed.`;
+    }
+
+    function renderSidebar() {
+      const nav = document.getElementById('subjectNav');
+      nav.innerHTML = SUBJECTS.map(s => `
+        <li>
+          <button type="button" data-subject="${s.id}" class="${s.id === activeSubjectId ? 'active' : ''}">
+            <span class="subject-code">${s.code}</span>
+            <span class="subject-name">${s.name}</span>
+            <div class="mini-bar-wrap"><div class="mini-bar" data-bar="${s.id}"></div></div>
+            <span class="mini-pct" data-pct="${s.id}">0%</span>
+          </button>
+        </li>
+      `).join('');
+
+      nav.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchSubject(btn.dataset.subject);
+          closeSidebar();
+        });
+      });
+    }
+
+    function renderTopicCard(topic) {
+      const done = isDone(topic.id);
+      const typeLabel = TYPE_MAP[topic.type] || topic.type;
+      const tags = [];
+      if (topic.important) tags.push('<span class="tag tag-important">★ exam important</span>');
+      tags.push(`<span class="tag tag-type">${typeLabel}</span>`);
+
+      return `
+        <article class="topic-card ${done ? 'done' : ''}" data-topic="${topic.id}">
+          <input type="checkbox" class="topic-checkbox" ${done ? 'checked' : ''}
+                 aria-label="Mark ${topic.title} as done">
+          <div class="topic-body">
+            <div class="topic-title">${escapeHtml(topic.title)}</div>
+            <div class="topic-tags">${tags.join('')}</div>
+            <div class="topic-actions">
+              <a class="btn btn-yt" href="${topic.yt}" target="_blank" rel="noopener">▶ YouTube</a>
+              <a class="btn btn-pdf" href="${topic.pdf}" target="_blank" rel="noopener">📄 PDF Notes</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderSubject(subjectId, animate = true) {
+      const subject = SUBJECTS.find(s => s.id === subjectId);
+      if (!subject) return;
+
+      const content = document.getElementById('contentArea');
+
+      const doRender = () => {
+        document.getElementById('subjectHeader').innerHTML = `
+          <h2>${escapeHtml(subject.name)}</h2>
+          <div class="subject-meta">
+            <span>${subject.courseCode}</span>
+            <span>${subject.credits} Credit Hours</span>
+            <span>Code: ${subject.code}</span>
+          </div>
+        `;
+
+        const total = subject.topics.length;
+        const done = getDoneCount(subject.topics);
+        const remaining = total - done;
+
+        document.getElementById('statsRow').innerHTML = `
+          <div class="stat-card">
+            <div class="value">${total}</div>
+            <div class="label">Total Topics</div>
+          </div>
+          <div class="stat-card">
+            <div class="value done">${done}</div>
+            <div class="label">Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="value remaining">${remaining}</div>
+            <div class="label">Remaining</div>
+          </div>
+        `;
+
+        const pending = subject.topics.filter(t => !isDone(t.id));
+        const completed = subject.topics.filter(t => isDone(t.id));
+
+        let topicsHtml = '';
+        if (pending.length) {
+          topicsHtml += `<h3 class="section-title">To Study (${pending.length})</h3>
+            <div class="topic-list">${pending.map(renderTopicCard).join('')}</div>`;
+        }
+        if (completed.length) {
+          topicsHtml += `<h3 class="section-title">Completed (${completed.length})</h3>
+            <div class="topic-list">${completed.map(renderTopicCard).join('')}</div>`;
+        }
+        if (!pending.length && !completed.length) {
+          topicsHtml = '<p>No topics in this subject.</p>';
+        }
+
+        document.getElementById('topicsContainer').innerHTML = topicsHtml;
+
+        const prompt = buildAiPrompt(subject);
+        document.getElementById('aiSection').innerHTML = `
+          <h3>Ask AI — Study Assistant</h3>
+          <p>Copy this prompt and paste it into Claude to get personalized help for ${escapeHtml(subject.name)}.</p>
+          <div class="prompt-box" id="promptBox">${escapeHtml(prompt)}</div>
+          <div class="ai-actions">
+            <button type="button" class="btn btn-copy" id="copyPromptBtn">📋 Copy Prompt</button>
+            <a class="btn btn-primary" href="https://claude.ai" target="_blank" rel="noopener">Open Claude.ai →</a>
+          </div>
+        `;
+
+        document.getElementById('copyPromptBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(prompt).then(() => {
+            const btn = document.getElementById('copyPromptBtn');
+            btn.classList.add('copied');
+            btn.textContent = '✓ Copied!';
+            showToast('Prompt copied to clipboard');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              btn.textContent = '📋 Copy Prompt';
+            }, 2000);
+          });
+        });
+
+        bindTopicCheckboxes();
+        content.classList.remove('fading');
+      };
+
+      if (animate) {
+        content.classList.add('fading');
+        setTimeout(doRender, 150);
+      } else {
+        doRender();
+      }
+    }
+
+    function bindTopicCheckboxes() {
+      document.querySelectorAll('.topic-card').forEach(card => {
+        const cb = card.querySelector('.topic-checkbox');
+        const id = card.dataset.topic;
+        cb.addEventListener('change', () => toggleTopic(id));
+      });
+    }
+
+    function switchSubject(subjectId) {
+      activeSubjectId = subjectId;
+      document.querySelectorAll('.subject-nav button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.subject === subjectId);
+      });
+      renderSubject(subjectId);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('visible');
+    }
+
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('overlay').classList.add('visible');
+    }
+
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open')) closeSidebar();
+      else openSidebar();
+    });
+
+    document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+    renderSidebar();
+    updateSidebarProgress();
+    requestAnimationFrame(() => {
+      updateSidebarProgress();
+      renderSubject(activeSubjectId, false);
+    });
+  </script>
+</body>
+</html>
