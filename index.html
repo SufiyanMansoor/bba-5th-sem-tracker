@@ -661,15 +661,17 @@
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #1e40af 100%);
       color: #fff;
-      border-color: var(--accent);
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.35);
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
-      border-color: var(--accent-hover);
+      background: linear-gradient(135deg, var(--accent-hover) 0%, #1e3a8a 100%);
+      border-color: transparent;
       color: #fff;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.4);
     }
 
     .btn-copy.copied {
