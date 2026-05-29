@@ -1,5 +1,5 @@
-const CACHE = 'bba5-v1';
-const ASSETS = ['./', './index.html', './smart.js', './manifest.webmanifest'];
+const CACHE = 'bba8-v2';
+const ASSETS = ['./', './index.html', './syllabus-data.js', './smart.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

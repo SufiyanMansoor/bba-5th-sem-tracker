@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f172a">
-  <meta name="description" content="BBA 5th Semester study tracker — Karachi University">
+  <meta name="description" content="KU BS(BBA) full 8-semester study tracker — syllabus, topics, mock papers, progress">
   <link rel="manifest" href="manifest.webmanifest">
-  <title>BBA 5th Sem Tracker — Karachi University</title>
+  <title>BBA Full Program Tracker — KU 8 Semesters</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
@@ -996,6 +996,93 @@
       flex-wrap: wrap;
     }
 
+
+    .semester-select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-family: inherit;
+      margin-bottom: 0.5rem;
+    }
+
+    .sem-picker-label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 0.25rem; }
+
+    .btn-back-sem {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--accent);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-back-sem:hover { background: var(--bg); }
+
+    .sem-overview-btn {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      background: rgba(59,130,246,0.25);
+      border: 1px solid rgba(59,130,246,0.5);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+    }
+
+    .sem-tip { color: var(--text-muted); margin: 0.5rem 0 1rem; font-size: 0.9rem; }
+
+    .paper-clear-steps {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .paper-clear-steps h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--navy); }
+    .paper-clear-steps ol { padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-muted); }
+    .paper-clear-steps li { margin-bottom: 0.35rem; }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .course-card {
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: box-shadow var(--transition), border-color var(--transition);
+      font-family: inherit;
+    }
+
+    .course-card:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(59,130,246,0.12); }
+
+    .course-card-code { font-family: Outfit, sans-serif; font-weight: 700; color: var(--accent); display: block; }
+    .course-card-name { font-size: 0.85rem; color: var(--navy); display: block; margin: 0.35rem 0; line-height: 1.3; }
+    .course-card-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+    .degree-badge {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
     @media print {
       body * { visibility: hidden; }
       .modal-overlay.open,
@@ -1172,7 +1259,7 @@
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <h1>BBA 5th Sem Tracker</h1>
+        <h1>BBA Full Program</h1>
         <p class="university">Karachi University</p>
       </div>
 
@@ -1184,7 +1271,8 @@
           </svg>
           <div class="progress-ring-text">
             <span class="pct" id="overallPct">0%</span>
-            <span class="label">Overall</span>
+            <span class="label">Degree</span>
+            <span class="degree-badge" id="degreeBadge"></span>
           </div>
         </div>
       </div>
@@ -1235,6 +1323,7 @@
     </div>
   </div>
 
+  <script src="syllabus-data.js"></script>
   <script>
     const STORAGE_KEY = 'bba5_progress_v2';
     const PAST_PAPER_KEY = 'bba5_pastpapers_v1';
@@ -1327,225 +1416,130 @@
       return /\.pdf(\?|$)/i.test(url);
     }
 
-    const SUBJECTS = [
-      {
-        id: 'fa',
-        code: 'FA',
-        name: 'Financial Accounting',
-        courseCode: 'BA-BS-501',
-        credits: 3,
-        topics: [
-          { id: 'fa-1', title: 'IAS & Financial Statement Principles', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=IAS+financial+statements+explained+urdu',
-            pdf: 'https://www.google.com/search?q=IAS+financial+statements+PDF+notes+BBA' },
-          { id: 'fa-2', title: 'Financial Statement Analysis Framework', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=financial+statement+analysis+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=financial+statement+analysis+framework+PDF' },
-          { id: 'fa-3', title: 'Financial Reporting Mechanics & Accruals', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=accounting+accruals+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=financial+reporting+mechanics+accruals+PDF+notes' },
-          { id: 'fa-4', title: 'Financial Reporting Standards — IFRS vs GAAP', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=IFRS+vs+GAAP+urdu+explained',
-            pdf: 'https://www.google.com/search?q=IFRS+GAAP+comparison+PDF+notes+BBA' },
-          { id: 'fa-5', title: 'Income Statement — Revenue & Expense Recognition', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=income+statement+revenue+recognition+urdu',
-            pdf: 'https://www.google.com/search?q=income+statement+components+PDF+BBA+notes' },
-          { id: 'fa-6', title: 'Balance Sheet — Assets, Liabilities & Equity', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=balance+sheet+urdu+lecture+BBA',
-            pdf: 'https://www.google.com/search?q=balance+sheet+assets+liabilities+PDF+notes' },
-          { id: 'fa-7', title: 'Cash Flow Statement — Direct & Indirect Method', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=cash+flow+statement+direct+indirect+urdu',
-            pdf: 'https://www.google.com/search?q=cash+flow+statement+PDF+notes+BBA' },
-          { id: 'fa-8', title: 'Inventory Accounting — FIFO, LIFO, Weighted Average', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=FIFO+LIFO+inventory+accounting+urdu',
-            pdf: 'https://www.google.com/search?q=FIFO+LIFO+inventory+accounting+PDF+notes' },
-          { id: 'fa-9', title: 'Current & Long-Term Liabilities — Bonds', type: 'calculation', important: false,
-            yt: 'https://www.youtube.com/results?search_query=bonds+liabilities+accounting+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=bonds+long+term+liabilities+accounting+PDF' },
-          { id: 'fa-10', title: 'Stockholders Equity, EPS & Dividends', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=stockholders+equity+EPS+dividends+urdu',
-            pdf: 'https://www.google.com/search?q=stockholders+equity+EPS+dividends+PDF+notes+BBA' }
-        ]
-      },
-      {
-        id: 'math',
-        code: 'MATH',
-        name: 'Basic Mathematics',
-        courseCode: 'BA-BS-511',
-        credits: 3,
-        topics: [
-          { id: 'math-1', title: 'Algebra, Ratios, Proportions & Percentages', type: 'calculation', important: false,
-            yt: 'https://www.youtube.com/results?search_query=basic+algebra+ratios+percentages+urdu+business+math',
-            pdf: 'https://www.google.com/search?q=basic+algebra+ratios+percentages+BBA+PDF+notes' },
-          { id: 'math-2', title: 'Sequences, Series & Business Applications', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=arithmetic+geometric+sequence+series+business+urdu',
-            pdf: 'https://www.google.com/search?q=sequence+series+business+application+PDF+notes' },
-          { id: 'math-3', title: 'Linear Equations, Inequalities & Simultaneous Equations', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=linear+equations+simultaneous+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=linear+equations+simultaneous+PDF+business+math' },
-          { id: 'math-4', title: 'Break-Even Analysis', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=break+even+analysis+urdu+lecture+business',
-            pdf: 'https://www.google.com/search?q=break+even+analysis+formula+PDF+notes+BBA' },
-          { id: 'math-5', title: 'Functions — Linear, Quadratic, Rational, Exponential', type: 'calculation', important: false,
-            yt: 'https://www.youtube.com/results?search_query=functions+types+business+math+urdu',
-            pdf: 'https://www.google.com/search?q=types+of+functions+business+math+PDF+notes' },
-          { id: 'math-6', title: 'Matrix Algebra — Types, Operations & Determinant', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=matrix+algebra+determinant+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=matrix+algebra+operations+determinant+PDF+notes' },
-          { id: 'math-7', title: 'Differentiation — Rules & Rate of Change', type: 'calculation', important: false,
-            yt: 'https://www.youtube.com/results?search_query=differentiation+rules+business+math+urdu',
-            pdf: 'https://www.google.com/search?q=differentiation+rules+rate+of+change+PDF+notes' },
-          { id: 'math-8', title: 'Simple & Compound Interest', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=simple+compound+interest+urdu+business+math',
-            pdf: 'https://www.google.com/search?q=simple+compound+interest+formula+PDF+BBA' },
-          { id: 'math-9', title: 'Annuities — Present Value & Future Value', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=annuity+present+future+value+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=annuity+present+value+future+value+PDF+notes' }
-        ]
-      },
-      {
-        id: 'econ',
-        code: 'ECON',
-        name: 'Micro Economics',
-        courseCode: 'BA-BS-521',
-        credits: 3,
-        topics: [
-          { id: 'econ-1', title: 'Demand & Supply Analysis — Equilibrium & Shifts', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=demand+supply+equilibrium+urdu+microeconomics',
-            pdf: 'https://www.google.com/search?q=demand+supply+analysis+equilibrium+PDF+notes+BBA' },
-          { id: 'econ-2', title: 'Price, Income & Cross Elasticity of Demand', type: 'calculation', important: true,
-            yt: 'https://www.youtube.com/results?search_query=price+income+cross+elasticity+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=elasticity+of+demand+types+formula+PDF+notes' },
-          { id: 'econ-3', title: 'Consumer & Producer Surplus', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=consumer+producer+surplus+urdu+microeconomics',
-            pdf: 'https://www.google.com/search?q=consumer+producer+surplus+PDF+microeconomics+notes' },
-          { id: 'econ-4', title: 'Efficiency, Resource Allocation & Marginal Benefits', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=efficiency+resource+allocation+microeconomics+urdu',
-            pdf: 'https://www.google.com/search?q=efficiency+resource+allocation+microeconomics+PDF' },
-          { id: 'econ-5', title: 'Output, Short-Run & Long-Run Costs', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=short+run+long+run+costs+production+urdu',
-            pdf: 'https://www.google.com/search?q=short+run+long+run+cost+output+PDF+microeconomics' },
-          { id: 'econ-6', title: 'Perfect Competition — Firm & Market', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=perfect+competition+urdu+lecture+microeconomics',
-            pdf: 'https://www.google.com/search?q=perfect+competition+microeconomics+PDF+notes' },
-          { id: 'econ-7', title: 'Monopoly — Pricing & Output Decisions', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=monopoly+pricing+output+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=monopoly+pricing+output+decisions+PDF+notes' },
-          { id: 'econ-8', title: 'Monopolistic Competition & Oligopoly', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=monopolistic+competition+oligopoly+urdu',
-            pdf: 'https://www.google.com/search?q=monopolistic+competition+oligopoly+PDF+notes+BBA' },
-          { id: 'econ-9', title: 'Economics of Regulation & Antitrust Policy', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=economics+regulation+antitrust+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=economics+of+regulation+antitrust+PDF+notes' }
-        ]
-      },
-      {
-        id: 'mgt',
-        code: 'MGT',
-        name: 'Principles of Management',
-        courseCode: 'BA-BS-531',
-        credits: 3,
-        topics: [
-          { id: 'mgt-1', title: 'Introduction to Management & Modern Challenges', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=introduction+management+principles+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=principles+of+management+introduction+PDF+notes+BBA' },
-          { id: 'mgt-2', title: 'CSR, Business Ethics & Managing Globally', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=CSR+business+ethics+management+urdu',
-            pdf: 'https://www.google.com/search?q=CSR+business+ethics+management+PDF+notes' },
-          { id: 'mgt-3', title: 'Planning — Principles, Decisions & Strategic Planning', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=planning+management+strategic+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=planning+management+principles+strategic+PDF+notes' },
-          { id: 'mgt-4', title: 'Organizing — Structure, Departments & Delegation', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=organizing+management+structure+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=organizing+management+departmentalization+PDF+notes' },
-          { id: 'mgt-5', title: 'Leadership — All Major Theories (Situational, Path-Goal, Transformational…)', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=leadership+theories+situational+path+goal+urdu',
-            pdf: 'https://www.google.com/search?q=leadership+theories+management+PDF+notes+BBA' },
-          { id: 'mgt-6', title: 'Motivation — Maslow, Vroom, McClelland, Equity Theory', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=motivation+theories+Maslow+Vroom+McClelland+urdu',
-            pdf: 'https://www.google.com/search?q=motivation+theories+Maslow+Vroom+McClelland+PDF+notes' },
-          { id: 'mgt-7', title: 'Controlling — Process, Budgets & Information Technology', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=controlling+management+budget+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=controlling+management+process+budget+PDF+notes' }
-        ]
-      },
-      {
-        id: 'mkt',
-        code: 'MKT',
-        name: 'Principles of Marketing',
-        courseCode: 'BA-BS-541',
-        credits: 3,
-        topics: [
-          { id: 'mkt-1', title: 'Marketing Concepts & Management Philosophies', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=marketing+concepts+management+philosophies+urdu',
-            pdf: 'https://www.google.com/search?q=marketing+concepts+management+philosophies+PDF+notes+BBA' },
-          { id: 'mkt-2', title: 'Marketing Strategy & the Marketing Process', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=marketing+strategy+process+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=marketing+strategy+process+PDF+notes' },
-          { id: 'mkt-3', title: 'Marketing Environment — Micro & Macro', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=marketing+environment+micro+macro+urdu',
-            pdf: 'https://www.google.com/search?q=marketing+environment+micro+macro+PDF+notes+BBA' },
-          { id: 'mkt-4', title: 'Consumer Buying Behavior & Decision Process', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=consumer+buying+behavior+decision+process+urdu',
-            pdf: 'https://www.google.com/search?q=consumer+buying+behavior+PDF+notes+BBA' },
-          { id: 'mkt-5', title: 'Market Segmentation, Targeting & Positioning — STP', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=STP+segmentation+targeting+positioning+urdu',
-            pdf: 'https://www.google.com/search?q=STP+market+segmentation+targeting+positioning+PDF+notes' },
-          { id: 'mkt-6', title: 'Product, Branding & Services Strategies', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=product+branding+strategies+urdu+marketing',
-            pdf: 'https://www.google.com/search?q=product+branding+strategies+marketing+PDF+notes' },
-          { id: 'mkt-7', title: 'New Product Development & Product Life Cycle', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=product+life+cycle+stages+urdu+marketing',
-            pdf: 'https://www.google.com/search?q=product+life+cycle+new+product+development+PDF+notes' },
-          { id: 'mkt-8', title: 'Pricing Strategies — Approaches & Adjustments', type: 'theory', important: true,
-            yt: 'https://www.youtube.com/results?search_query=pricing+strategies+approaches+urdu+marketing',
-            pdf: 'https://www.google.com/search?q=pricing+strategies+marketing+PDF+notes+BBA' },
-          { id: 'mkt-9', title: 'Marketing Channels — Retail, Wholesale & Transport', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=marketing+channels+distribution+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=marketing+channels+distribution+PDF+notes' },
-          { id: 'mkt-10', title: 'Integrated Marketing Communication (IMC) & Promotion Mix', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=integrated+marketing+communication+IMC+urdu',
-            pdf: 'https://www.google.com/search?q=integrated+marketing+communication+IMC+PDF+notes' }
-        ]
-      },
-      {
-        id: 'comm',
-        code: 'COMM',
-        name: 'Business Communication',
-        courseCode: 'BA-BS-551',
-        credits: 3,
-        topics: [
-          { id: 'comm-1', title: 'Communication at Work — Networks, Barriers & Process', type: 'theory', important: false,
-            yt: 'https://www.youtube.com/results?search_query=business+communication+process+barriers+urdu',
-            pdf: 'https://www.google.com/search?q=business+communication+networks+barriers+PDF+notes+BBA' },
-          { id: 'comm-2', title: 'Writing Business Messages — Principles & Planning', type: 'writing', important: true,
-            yt: 'https://www.youtube.com/results?search_query=business+message+writing+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=business+message+writing+principles+PDF+notes' },
-          { id: 'comm-3', title: 'Business Reports — Formal & Informal, Documentation', type: 'writing', important: true,
-            yt: 'https://www.youtube.com/results?search_query=business+report+writing+formal+informal+urdu',
-            pdf: 'https://www.google.com/search?q=business+report+writing+formal+informal+PDF+notes' },
-          { id: 'comm-4', title: 'Memo Format & Business Document Layout', type: 'writing', important: true,
-            yt: 'https://www.youtube.com/results?search_query=memo+format+business+document+urdu+lecture',
-            pdf: 'https://www.google.com/search?q=memo+format+business+document+layout+PDF+notes' },
-          { id: 'comm-5', title: 'Routine, Goodwill & Direct Request Messages', type: 'writing', important: false,
-            yt: 'https://www.youtube.com/results?search_query=routine+goodwill+messages+business+communication+urdu',
-            pdf: 'https://www.google.com/search?q=routine+goodwill+messages+business+communication+PDF' },
-          { id: 'comm-6', title: 'Bad News & Persuasive Messages Strategies', type: 'writing', important: false,
-            yt: 'https://www.youtube.com/results?search_query=bad+news+persuasive+messages+business+urdu',
-            pdf: 'https://www.google.com/search?q=bad+news+persuasive+messages+business+communication+PDF' },
-          { id: 'comm-7', title: 'Resume Writing & Application Letters', type: 'writing', important: true,
-            yt: 'https://www.youtube.com/results?search_query=resume+writing+application+letter+urdu+business',
-            pdf: 'https://www.google.com/search?q=resume+writing+application+letter+PDF+notes+BBA' }
-        ]
-      }
-    ];
+    const CURRENT_SEM_KEY = 'bba_current_sem_v1';
+    const FREE_BOOKS_BY_CODE = {
+      FA: FREE_BOOKS.fa, MATH: FREE_BOOKS.math, ECON: FREE_BOOKS.econ,
+      MGT: FREE_BOOKS.mgt, MKT: FREE_BOOKS.mkt, COMM: FREE_BOOKS.comm
+    };
+    const PAPER_BY_CODE = {
+      FA: 'fa', MATH: 'math', ECON: 'econ', MGT: 'mgt', MKT: 'mkt', COMM: 'comm',
+      MAC: 'econ', BF: 'fa', CMA: 'fa', STAT: 'math', POM: 'mgt', HRM: 'mgt',
+      FM: 'fa', MA: 'fa', MM: 'mkt', PDF: 'mgt', BRM: 'mgt', BLR: 'comm',
+      SCM: 'mgt', CPP: 'fa', IB: 'mkt', SM: 'mgt'
+    };
 
-    SUBJECTS.forEach(s => {
-      s.freeBook = FREE_BOOKS[s.id];
-      s.topics.forEach(t => {
-        if (FREE_TOPIC_PDF[t.id]) t.pdf = FREE_TOPIC_PDF[t.id];
+    let activeSemesterId = localStorage.getItem(CURRENT_SEM_KEY) || 's5';
+    let SUBJECTS = [];
+    let viewMode = 'semester';
+
+    function getSemester(id) {
+      return BBA_PROGRAM.semesters.find(s => s.id === id) || BBA_PROGRAM.semesters[4];
+    }
+
+    function syncSubjects() {
+      const sem = getSemester(activeSemesterId);
+      SUBJECTS = sem.courses;
+      SUBJECTS.forEach(s => {
+        s.freeBook = FREE_BOOKS_BY_CODE[s.code] || null;
+        s.topics.forEach(t => {
+          if (FREE_TOPIC_PDF[t.id]) t.pdf = FREE_TOPIC_PDF[t.id];
+        });
       });
-    });
+      if (!activeSubjectId || !SUBJECTS.find(c => c.id === activeSubjectId)) {
+        activeSubjectId = SUBJECTS[0]?.id;
+      }
+    }
+
+    function getAllProgramTopics() {
+      const topics = [];
+      BBA_PROGRAM.semesters.forEach(sem => {
+        sem.courses.forEach(c => c.topics.forEach(t => topics.push({ ...t, course: c, sem })));
+      });
+      return topics;
+    }
+
+    function getPaperTemplate(subject) {
+      const key = PAPER_BY_CODE[subject.code] || 'mgt';
+      return PAPER_TEMPLATES[key] || PAPER_TEMPLATES.mgt;
+    }
+
+    function switchSemester(semId) {
+      activeSemesterId = semId;
+      localStorage.setItem(CURRENT_SEM_KEY, semId);
+      syncSubjects();
+      viewMode = 'semester';
+      renderSidebar();
+      renderSemesterDashboard();
+      updateSidebarProgress();
+      closeSidebar();
+    }
+
+    function renderSemesterDashboard() {
+      viewMode = 'semester';
+      const sem = getSemester(activeSemesterId);
+      const total = sem.courses.reduce((s, c) => s + c.topics.length, 0);
+      const done = sem.courses.reduce((s, c) => s + getDoneCount(c.topics), 0);
+      const pct = total ? Math.round((done / total) * 100) : 0;
+
+      document.getElementById('subjectHeader').innerHTML = `
+        <h2>${escapeHtml(sem.label)}</h2>
+        <p class="sem-tip">${escapeHtml(sem.tip)}</p>
+        <div class="subject-meta">
+          <span>${sem.courses.length} Courses</span>
+          <span>${total} Topics</span>
+          <span class="countdown-badge">${pct}% this semester</span>
+        </div>
+        <div class="paper-clear-steps">
+          <h3>📋 Paper clear roadmap — is semester ke liye</h3>
+          <ol>
+            <li><strong>Har subject</strong> kholo → syllabus topics check karo</li>
+            <li><strong>YouTube + Free PDF</strong> se parho</li>
+            <li><strong>Past papers</strong> log karo (📋 Past button)</li>
+            <li><strong>Mock paper</strong> + timed exam practice</li>
+            <li><strong>Exam date</strong> set karo — countdown dekho</li>
+          </ol>
+        </div>
+      `;
+
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-card"><div class="value">${BBA_PROGRAM.totalCourses}</div><div class="label">Total Courses (Degree)</div></div>
+        <div class="stat-card"><div class="value done">${getOverallPct()}%</div><div class="label">Degree Progress</div></div>
+        <div class="stat-card"><div class="value remaining">${total - done}</div><div class="label">Topics Left (Sem)</div></div>
+      `;
+
+      document.getElementById('toolsSection').innerHTML = '';
+      document.getElementById('aiSection').innerHTML = '';
+
+      document.getElementById('topicsContainer').innerHTML = `
+        <h3 class="section-title">Subjects — click to open</h3>
+        <div class="course-grid">${sem.courses.map(c => {
+          const d = getDoneCount(c.topics);
+          const t = c.topics.length;
+          const cp = t ? Math.round((d / t) * 100) : 0;
+          return `<button type="button" class="course-card" data-open-course="${c.id}">
+            <span class="course-card-code">${c.code}</span>
+            <span class="course-card-name">${escapeHtml(c.name)}</span>
+            <span class="course-card-meta">${c.courseCode} · ${d}/${t} topics</span>
+            <div class="mini-bar-wrap"><div class="mini-bar" style="width:${cp}%"></div></div>
+          </button>`;
+        }).join('')}</div>
+        ${sem.id === 's8' ? renderElectivesHtml() : ''}
+      `;
+
+      document.querySelectorAll('[data-open-course]').forEach(btn => {
+        btn.onclick = () => { viewMode = 'course'; switchSubject(btn.dataset.openCourse); };
+      });
+    }
+
+    function renderElectivesHtml() {
+      const e = BBA_PROGRAM.electives;
+      return `<div class="free-books" style="margin-top:1.5rem">
+        <h3>🎓 Semester 8 Electives (choose one specialization)</h3>
+        <p><strong>Marketing:</strong> ${e.mkt.map(x => x.name).join(' · ')}</p>
+        <p><strong>Finance:</strong> ${e.fin.map(x => x.name).join(' · ')}</p>
+        <p><strong>HRM:</strong> ${e.hrm.map(x => x.name).join(' · ')}</p>
+      </div>`;
+    }
 
     const PAPER_TEMPLATES = {
       fa: { mcq: 10, short: 3, long: 1, numerical: 3, writing: 0, marks: 60 },
@@ -1642,7 +1636,8 @@
     let progress = loadProgress();
     let pastPapers = loadPastPapers();
     let examDates = loadExamDates();
-    let activeSubjectId = SUBJECTS[0].id;
+    let activeSubjectId = null;
+    syncSubjects();
     let modalTopicId = null;
     let timerSecondsLeft = 0;
     let timerTotalSeconds = 0;
@@ -1724,9 +1719,11 @@
     }
 
     function getTopicById(topicId) {
-      for (const s of SUBJECTS) {
-        const t = s.topics.find(x => x.id === topicId);
-        if (t) return { subject: s, topic: t };
+      for (const sem of BBA_PROGRAM.semesters) {
+        for (const s of sem.courses) {
+          const t = s.topics.find(x => x.id === topicId);
+          if (t) return { subject: s, topic: t, semester: sem };
+        }
       }
       return null;
     }
@@ -1780,15 +1777,15 @@
     }
 
     function buildMockPaper(subject) {
-      const tpl = PAPER_TEMPLATES[subject.id] || PAPER_TEMPLATES.fa;
+      const tpl = getPaperTemplate(subject);
       const date = new Date().toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' });
       let html = `
         <div class="mock-paper" id="printablePaper">
           <div class="paper-head">
-            <h4>Karachi University — BBA 5th Semester</h4>
+            <h4>Karachi University — ${escapeHtml(getSemester(activeSemesterId).label)}</h4>
             <p><strong>${escapeHtml(subject.name)}</strong> (${subject.courseCode})</p>
             <p>Mock Examination Paper · Time: ${formatTimerLabel(loadTimerMinutes())} · Total: ${tpl.marks} Marks</p>
-            <p style="font-size:0.8rem;color:#64748b">Generated ${date} · BBA 5th Sem Tracker</p>
+            <p style="font-size:0.8rem;color:#64748b">Generated ${date} · KU BBA Full Program Tracker</p>
           </div>
           <p><strong>Instructions:</strong> Attempt all questions. Write neat and to the point.</p>
       `;
@@ -1822,9 +1819,9 @@
     }
 
     function buildPaperAiPrompt(subject) {
-      const tpl = PAPER_TEMPLATES[subject.id] || PAPER_TEMPLATES.fa;
+      const tpl = getPaperTemplate(subject);
       const important = subject.topics.filter(t => t.important).map(t => t.title).join('\n• ');
-      return `I am a Karachi University BBA 5th Semester student. Create a complete ${tpl.marks}-mark examination paper for ${subject.name} (${subject.courseCode}).
+      return `I am a Karachi University BS(BBA) student (${getSemester(activeSemesterId).label}). Create a complete ${tpl.marks}-mark examination paper for ${subject.name} (${subject.courseCode}).
 
 Include:
 - ${tpl.mcq} MCQs (1 mark each)
@@ -1890,8 +1887,8 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
       };
     }
 
-    function openFormulaModal(subject) {
-      const html = FORMULA_SHEETS[subject.id];
+    function openFormulaModal(subject, sheetKey) {
+      const html = FORMULA_SHEETS[sheetKey || subject.id];
       if (!html) {
         showToast('Formula sheet available for FA, MATH & ECON only');
         return;
@@ -2181,7 +2178,7 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
           ).join('')}</ul></div>`
         : '<div class="high-freq">Log past papers on topics (📋 Past button) to see high-frequency list here.</div>';
 
-      const hasFormula = !!FORMULA_SHEETS[subject.id];
+      const hasFormula = !!FORMULA_SHEETS[subject.id] || !!FORMULA_SHEETS[PAPER_BY_CODE[subject.code]];
       const timerMins = loadTimerMinutes();
       const presets = [60, 90, 120, 180];
 
@@ -2232,7 +2229,7 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
       document.getElementById('btnTimedExam').onclick = () => openTimedExam(subject);
       document.getElementById('btnTimerOnly').onclick = () => startTimerOnly();
       document.getElementById('btnFlashcards').onclick = () => openFlashcardsModal(subject, 'important');
-      if (hasFormula) document.getElementById('btnFormula').onclick = () => openFormulaModal(subject);
+      if (hasFormula) document.getElementById('btnFormula').onclick = () => openFormulaModal(subject, PAPER_BY_CODE[subject.code] || subject.id);
       document.getElementById('btnPaperAi').onclick = () => {
         navigator.clipboard.writeText(buildPaperAiPrompt(subject)).then(() => showToast('Full paper prompt copied — paste in Claude.ai'));
       };
@@ -2260,7 +2257,7 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
     }
 
     function getTotalTopics() {
-      return SUBJECTS.reduce((sum, s) => sum + s.topics.length, 0);
+      return getAllProgramTopics().length;
     }
 
     function getDoneCount(topics) {
@@ -2274,10 +2271,10 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
     }
 
     function getOverallPct() {
-      const total = getTotalTopics();
-      if (!total) return 0;
-      const done = SUBJECTS.reduce((sum, s) => sum + getDoneCount(s.topics), 0);
-      return Math.round((done / total) * 100);
+      const all = getAllProgramTopics();
+      if (!all.length) return 0;
+      const done = all.filter(x => isDone(x.id)).length;
+      return Math.round((done / all.length) * 100);
     }
 
     function updateSidebarProgress() {
@@ -2294,6 +2291,8 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
         if (bar) bar.style.width = sp + '%';
         if (label) label.textContent = sp + '%';
       });
+      const deg = document.getElementById('degreeBadge');
+      if (deg) deg.textContent = `${getOverallPct()}% · ${BBA_PROGRAM.totalCourses} courses`;
     }
 
     function buildAiPrompt(subject) {
@@ -2304,7 +2303,7 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
         .map(t => `• ${t.title}`)
         .join('\n');
 
-      return `I'm a Karachi University BBA 5th Semester student preparing for exams in ${subject.name} (${subject.courseCode}).
+      return `I'm a Karachi University BS(BBA) student (${getSemester(activeSemesterId).label}) preparing for exams in ${subject.name} (${subject.courseCode}).
 
 Please help me study these topics with clear explanations, key points, and practice questions suitable for a BBA exam:
 
@@ -2321,22 +2320,27 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
 
     function renderSidebar() {
       const nav = document.getElementById('subjectNav');
-      nav.innerHTML = SUBJECTS.map(s => `
-        <li>
-          <button type="button" data-subject="${s.id}" class="${s.id === activeSubjectId ? 'active' : ''}">
+      let html = '<li class="sem-picker-wrap"><label class="sem-picker-label">My semester</label><select id="semesterSelect" class="semester-select">';
+      BBA_PROGRAM.semesters.forEach(s => {
+        html += `<option value="${s.id}" ${s.id === activeSemesterId ? 'selected' : ''}>${s.label}</option>`;
+      });
+      html += '</select></li>';
+      html += '<li><button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button></li>';
+      html += SUBJECTS.map(s => {
+        const semPct = getSubjectPct(s);
+        return `<li><button type="button" data-subject="${s.id}" class="${s.id === activeSubjectId && viewMode === 'course' ? 'active' : ''}">
             <span class="subject-code">${s.code}</span>
             <span class="subject-name">${s.name}</span>
             <div class="mini-bar-wrap"><div class="mini-bar" data-bar="${s.id}"></div></div>
-            <span class="mini-pct" data-pct="${s.id}">0%</span>
-          </button>
-        </li>
-      `).join('');
+            <span class="mini-pct" data-pct="${s.id}">${semPct}%</span>
+          </button></li>`;
+      }).join('');
 
-      nav.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          switchSubject(btn.dataset.subject);
-          closeSidebar();
-        });
+      nav.innerHTML = html;
+      document.getElementById('semesterSelect').onchange = e => switchSemester(e.target.value);
+      document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
+      nav.querySelectorAll('[data-subject]').forEach(btn => {
+        btn.addEventListener('click', () => { viewMode = 'course'; switchSubject(btn.dataset.subject); closeSidebar(); });
       });
     }
 
@@ -2394,6 +2398,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
         ` : '';
 
         document.getElementById('subjectHeader').innerHTML = `
+          <button type="button" class="btn-back-sem" id="btnBackSem">← ${escapeHtml(getSemester(activeSemesterId).label)} overview</button>
           <h2>${escapeHtml(subject.name)}</h2>
           <div class="subject-meta">
             <span>${subject.courseCode}</span>
@@ -2402,6 +2407,7 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
           </div>
           ${freeBookHtml}
         `;
+        document.getElementById('btnBackSem').onclick = () => renderSemesterDashboard();
 
         const total = subject.topics.length;
         const done = getDoneCount(subject.topics);
@@ -2490,7 +2496,8 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
 
     function switchSubject(subjectId) {
       activeSubjectId = subjectId;
-      document.querySelectorAll('.subject-nav button').forEach(btn => {
+      viewMode = 'course';
+      document.querySelectorAll('.subject-nav button[data-subject]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.subject === subjectId);
       });
       renderSubject(subjectId);
@@ -2571,7 +2578,8 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
     updateSidebarProgress();
     requestAnimationFrame(() => {
       updateSidebarProgress();
-      renderSubject(activeSubjectId, false);
+      if (viewMode === 'semester') renderSemesterDashboard();
+      else renderSubject(activeSubjectId, false);
       if (window.initSmartFeatures) initSmartFeatures();
     });
   </script>

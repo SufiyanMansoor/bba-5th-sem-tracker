@@ -1,7 +1,7 @@
 {
-  "name": "BBA 5th Sem Tracker",
-  "short_name": "BBA Tracker",
-  "description": "Karachi University BBA 5th Semester study tracker",
+  "name": "KU BBA Full Program Tracker",
+  "short_name": "BBA KU",
+  "description": "Karachi University BS(BBA) 8-semester syllabus & exam prep tracker",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
