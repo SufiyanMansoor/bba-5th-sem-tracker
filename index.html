@@ -8,7 +8,7 @@
   <meta name="description" content="KU BS(BBA) full 8-semester study tracker — syllabus, topics, mock papers, progress">
   <script>
     (function () {
-      var V = '7';
+      var V = '8';
       if (localStorage.getItem('bba_app_v') === V) return;
       localStorage.setItem('bba_app_v', V);
       if ('caches' in window) {
@@ -1127,14 +1127,19 @@
     }
 
 
-    /* Hide legacy dropdown if old cache still injects it */
-    .sidebar select#semesterSelect,
+    /* Kill legacy native dropdown — causes white list bug on Windows */
+    .sidebar select,
     .sidebar .semester-select,
-    .sidebar .sem-dropdown-menu {
+    .sidebar .sem-dropdown,
+    .sidebar .sem-picker-wrap,
+    #semesterSelect {
       display: none !important;
-      height: 0 !important;
-      overflow: hidden !important;
       visibility: hidden !important;
+      position: absolute !important;
+      left: -9999px !important;
+      height: 0 !important;
+      width: 0 !important;
+      pointer-events: none !important;
     }
 
     /* Semester grid — no dropdown, no native select */
@@ -1570,7 +1575,7 @@
       <div class="sidebar-header">
         <h1>BBA Full Program</h1>
         <p class="university">Karachi University · KUBS</p>
-        <span class="brand-tag">Enterprise · v7</span>
+        <span class="brand-tag">Enterprise · v8</span>
       </div>
 
       <div class="overall-progress">
@@ -1593,7 +1598,24 @@
         </div>
       </div>
 
-      <div class="sidebar-controls" id="sidebarControls"></div>
+      <div class="sidebar-controls" id="sidebarControls">
+        <p class="sem-rail-title">Select semester</p>
+        <div class="sem-grid" id="semGrid" role="group" aria-label="Semester selection">
+          <button type="button" class="sem-chip" data-sem="s1" title="Year 1 — Semester 1"><span class="sem-chip-y">Y1</span><span class="sem-chip-s">S1</span></button>
+          <button type="button" class="sem-chip" data-sem="s2" title="Year 1 — Semester 2"><span class="sem-chip-y">Y1</span><span class="sem-chip-s">S2</span></button>
+          <button type="button" class="sem-chip" data-sem="s3" title="Year 2 — Semester 3"><span class="sem-chip-y">Y2</span><span class="sem-chip-s">S3</span></button>
+          <button type="button" class="sem-chip" data-sem="s4" title="Year 2 — Semester 4"><span class="sem-chip-y">Y2</span><span class="sem-chip-s">S4</span></button>
+          <button type="button" class="sem-chip active" data-sem="s5" title="Year 3 — Semester 5"><span class="sem-chip-y">Y3</span><span class="sem-chip-s">S5</span></button>
+          <button type="button" class="sem-chip" data-sem="s6" title="Year 3 — Semester 6"><span class="sem-chip-y">Y3</span><span class="sem-chip-s">S6</span></button>
+          <button type="button" class="sem-chip" data-sem="s7" title="Year 4 — Semester 7"><span class="sem-chip-y">Y4</span><span class="sem-chip-s">S7</span></button>
+          <button type="button" class="sem-chip" data-sem="s8" title="Year 4 — Semester 8"><span class="sem-chip-y">Y4</span><span class="sem-chip-s">S8</span></button>
+        </div>
+        <div class="sem-current-banner" id="semCurrentBanner">
+          <strong>Active</strong>
+          <span id="semCurrentLabel">Year 3 — Semester 5</span>
+        </div>
+        <button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button>
+      </div>
 
       <div class="sidebar-scroll">
         <ul class="subject-nav" id="subjectNav"></ul>
@@ -1651,7 +1673,7 @@
     </div>
   </div>
 
-  <script src="syllabus-data.js?v=7"></script>
+  <script src="syllabus-data.js?v=8"></script>
   <script>
     const STORAGE_KEY = 'bba5_progress_v2';
     const PAST_PAPER_KEY = 'bba5_pastpapers_v1';
@@ -1820,40 +1842,51 @@
 
     function purgeLegacySemesterUI() {
       document.querySelectorAll('#semesterSelect, .semester-select, .sem-dropdown, .sem-picker-wrap').forEach(el => el.remove());
-      document.querySelectorAll('.subject-nav label.sem-picker-label').forEach(el => {
-        if (/semester/i.test(el.textContent)) el.closest('li')?.remove();
+      document.querySelectorAll('.subject-nav select, .subject-nav .sem-picker-label').forEach(el => el.remove());
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) {
+        sidebar.querySelectorAll('select').forEach(el => el.remove());
+      }
+    }
+
+    function bindSemGrid() {
+      const grid = document.getElementById('semGrid');
+      if (!grid || grid.dataset.bound === '1') return;
+      grid.dataset.bound = '1';
+      grid.querySelectorAll('.sem-chip').forEach(btn => {
+        btn.addEventListener('click', () => switchSemester(btn.dataset.sem));
       });
+      const overview = document.getElementById('btnSemOverview');
+      if (overview && overview.dataset.bound !== '1') {
+        overview.dataset.bound = '1';
+        overview.addEventListener('click', () => { renderSemesterDashboard(); closeSidebar(); });
+      }
     }
 
     function renderSemControls() {
       purgeLegacySemesterUI();
-      const el = document.getElementById('sidebarControls');
-      if (!el) return;
       const currentSem = getSemester(activeSemesterId);
-      const chips = BBA_PROGRAM.semesters.map(s => {
-        const y = s.year || 1;
-        const n = s.semester || 1;
-        const active = s.id === activeSemesterId ? ' active' : '';
-        return `<button type="button" class="sem-chip${active}" data-sem="${s.id}" title="${escapeHtml(s.label)}" aria-label="${escapeHtml(s.label)}">
-          <span class="sem-chip-y">Y${y}</span>
-          <span class="sem-chip-s">S${n}</span>
-        </button>`;
-      }).join('');
-      el.innerHTML = `
-        <p class="sem-rail-title">Select semester</p>
-        <div class="sem-grid" role="group" aria-label="Semester selection">${chips}</div>
-        <div class="sem-current-banner">
-          <strong>Active</strong>
-          ${escapeHtml(currentSem.label)}
-        </div>
-        <button type="button" class="sem-overview-btn" id="btnSemOverview">📊 Semester overview</button>
-      `;
-      el.querySelectorAll('.sem-chip').forEach(btn => {
-        btn.onclick = () => switchSemester(btn.dataset.sem);
+      document.querySelectorAll('#semGrid .sem-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sem === activeSemesterId);
       });
-      document.getElementById('btnSemOverview').onclick = () => { renderSemesterDashboard(); closeSidebar(); };
+      const label = document.getElementById('semCurrentLabel');
+      if (label) label.textContent = currentSem.label;
       const top = document.getElementById('topbarSemLabel');
       if (top) top.textContent = currentSem.label;
+      bindSemGrid();
+    }
+
+    function watchSidebarLegacyUI() {
+      const sidebar = document.getElementById('sidebar');
+      if (!sidebar || sidebar.dataset.watched === '1') return;
+      sidebar.dataset.watched = '1';
+      new MutationObserver(() => {
+        const bad = sidebar.querySelector('select, #semesterSelect, .semester-select');
+        if (bad) {
+          purgeLegacySemesterUI();
+          renderSemControls();
+        }
+      }).observe(sidebar, { childList: true, subtree: true });
     }
 
     function renderSemesterDashboard() {
@@ -2963,12 +2996,20 @@ My progress: ${getDoneCount(subject.topics)}/${subject.topics.length} topics com
       if (window.initSmartFeatures) initSmartFeatures();
     });
   </script>
-  <script src="smart.js?v=7"></script>
+  <script src="smart.js?v=8"></script>
   <script>
-    purgeLegacySemesterUI();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js?v=7').then(function (reg) { return reg.update(); }).catch(function () {});
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        return Promise.all(regs.map(function (r) { return r.unregister(); }));
+      });
     }
+    if ('caches' in window) {
+      caches.keys().then(function (keys) {
+        return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+      });
+    }
+    purgeLegacySemesterUI();
+    watchSidebarLegacyUI();
   </script>
 </body>
 </html>
