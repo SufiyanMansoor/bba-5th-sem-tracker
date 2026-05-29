@@ -607,12 +607,59 @@
       border-top: 1px solid var(--border);
     }
 
-    .exam-date-row input[type="date"] {
+    .exam-date-row input[type="date"],
+    .timer-duration-row input[type="number"] {
       padding: 0.4rem 0.6rem;
       border: 1px solid var(--border);
       border-radius: 8px;
       font-family: inherit;
     }
+
+    .timer-duration-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timer-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .timer-preset {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .timer-preset:hover { border-color: var(--accent); }
+
+    .timer-preset.active {
+      background: #eff6ff;
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .timer-custom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .timer-custom input[type="number"] { width: 3.5rem; }
 
     .countdown-badge {
       background: var(--amber-bg);
@@ -1016,7 +1063,7 @@
   <div class="toast" id="toast"></div>
 
   <div class="exam-timer-bar hidden" id="examTimerBar" aria-live="polite">
-    <span class="timer-label">Exam mode · 3 hours</span>
+    <span class="timer-label" id="timerLabel">Exam mode</span>
     <span class="timer-display" id="timerDisplay">90:00</span>
     <button type="button" class="btn" id="timerPause">Pause</button>
     <button type="button" class="btn" id="timerStop">End exam</button>
@@ -1424,7 +1471,8 @@
       'comm-7': 'Resume: contact, objective, education, experience, skills; letter tailored to job.'
     };
 
-    const EXAM_DURATION_SEC = 90 * 60;
+    const TIMER_MINS_KEY = 'bba5_timer_mins_v1';
+    const DEFAULT_TIMER_MINS = 90;
 
     let progress = loadProgress();
     let pastPapers = loadPastPapers();
@@ -1432,9 +1480,38 @@
     let activeSubjectId = SUBJECTS[0].id;
     let modalTopicId = null;
     let timerSecondsLeft = 0;
+    let timerTotalSeconds = 0;
     let timerInterval = null;
     let timerPaused = false;
     let flashcardState = { cards: [], index: 0, flipped: false };
+
+    function loadTimerMinutes() {
+      try {
+        const n = parseInt(localStorage.getItem(TIMER_MINS_KEY), 10);
+        if (n >= 15 && n <= 300) return n;
+      } catch (_) {}
+      return DEFAULT_TIMER_MINS;
+    }
+
+    function saveTimerMinutes(mins) {
+      const m = Math.min(300, Math.max(15, mins));
+      localStorage.setItem(TIMER_MINS_KEY, String(m));
+      return m;
+    }
+
+    function getTimerDurationSec() {
+      return loadTimerMinutes() * 60;
+    }
+
+    function formatTimerLabel(mins) {
+      if (mins >= 60 && mins % 60 === 0) return `${mins / 60} hour${mins > 60 ? 's' : ''}`;
+      if (mins >= 60) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${h}h ${m}m`;
+      }
+      return `${mins} min`;
+    }
 
     function loadProgress() {
       try {
@@ -1545,7 +1622,7 @@
           <div class="paper-head">
             <h4>Karachi University — BBA 5th Semester</h4>
             <p><strong>${escapeHtml(subject.name)}</strong> (${subject.courseCode})</p>
-            <p>Mock Examination Paper · Time: 3 Hours · Total: ${tpl.marks} Marks</p>
+            <p>Mock Examination Paper · Time: ${formatTimerLabel(loadTimerMinutes())} · Total: ${tpl.marks} Marks</p>
             <p style="font-size:0.8rem;color:#64748b">Generated ${date} · BBA 5th Sem Tracker</p>
           </div>
           <p><strong>Instructions:</strong> Attempt all questions. Write neat and to the point.</p>
@@ -1712,18 +1789,24 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
     }
 
     function formatTimer(sec) {
-      const m = Math.floor(sec / 60);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
       const s = sec % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       return `${m}:${String(s).padStart(2, '0')}`;
     }
 
     function updateTimerDisplay() {
       const bar = document.getElementById('examTimerBar');
       const el = document.getElementById('timerDisplay');
+      const label = document.getElementById('timerLabel');
       el.textContent = formatTimer(timerSecondsLeft);
+      if (label) label.textContent = `Exam mode · ${formatTimerLabel(loadTimerMinutes())}`;
       bar.classList.remove('warning', 'critical');
-      if (timerSecondsLeft <= 600) bar.classList.add('critical');
-      else if (timerSecondsLeft <= 1800) bar.classList.add('warning');
+      const warnAt = Math.min(1800, Math.floor(timerTotalSeconds * 0.15));
+      const critAt = Math.min(600, Math.floor(timerTotalSeconds * 0.08));
+      if (timerSecondsLeft <= critAt) bar.classList.add('critical');
+      else if (timerSecondsLeft <= warnAt) bar.classList.add('warning');
     }
 
     function stopExamTimer() {
@@ -1735,9 +1818,10 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
       document.getElementById('timerPause').textContent = 'Pause';
     }
 
-    function startExamTimer() {
+    function startExamTimer(durationSec) {
       stopExamTimer();
-      timerSecondsLeft = EXAM_DURATION_SEC;
+      timerTotalSeconds = durationSec || getTimerDurationSec();
+      timerSecondsLeft = timerTotalSeconds;
       timerPaused = false;
       document.getElementById('examTimerBar').classList.remove('hidden');
       document.body.classList.add('exam-active');
@@ -1771,9 +1855,16 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
     }
 
     function openTimedExam(subject) {
+      const mins = loadTimerMinutes();
       openMockPaperModal(subject);
-      startExamTimer();
-      showToast('90-minute exam timer started');
+      startExamTimer(mins * 60);
+      showToast(`${formatTimerLabel(mins)} exam timer started`);
+    }
+
+    function startTimerOnly() {
+      const mins = loadTimerMinutes();
+      startExamTimer(mins * 60);
+      showToast(`Timer started — ${formatTimerLabel(mins)}`);
     }
 
     function getFlashcardBack(topic) {
@@ -1926,12 +2017,26 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
         : '<div class="high-freq">Log past papers on topics (📋 Past button) to see high-frequency list here.</div>';
 
       const hasFormula = !!FORMULA_SHEETS[subject.id];
+      const timerMins = loadTimerMinutes();
+      const presets = [60, 90, 120, 180];
 
       document.getElementById('toolsSection').innerHTML = `
         <h3>📝 Exam & paper tools</h3>
+        <div class="timer-duration-row">
+          <span>⏱️ Timer:</span>
+          <div class="timer-presets">
+            ${presets.map(p => `<button type="button" class="timer-preset ${p === timerMins ? 'active' : ''}" data-mins="${p}">${p}m</button>`).join('')}
+          </div>
+          <div class="timer-custom">
+            <input type="number" id="customHrs" min="0" max="5" value="${Math.floor(timerMins / 60)}" aria-label="Hours"> h
+            <input type="number" id="customMins" min="0" max="59" value="${timerMins % 60}" aria-label="Minutes"> m
+            <button type="button" class="btn" id="btnSaveTimer">Set</button>
+          </div>
+        </div>
         <div class="tools-grid">
           <button type="button" class="btn btn-primary" id="btnMockPaper">📝 Generate mock paper</button>
-          <button type="button" class="btn btn-primary" id="btnTimedExam">⏱️ 90-min timed exam</button>
+          <button type="button" class="btn btn-primary" id="btnTimedExam">⏱️ Timed exam (${formatTimerLabel(timerMins)})</button>
+          <button type="button" class="btn" id="btnTimerOnly">⏱️ Timer only</button>
           <button type="button" class="btn" id="btnFlashcards">🃏 Flashcards</button>
           ${hasFormula ? '<button type="button" class="btn" id="btnFormula">📐 Formula sheet</button>' : ''}
           <button type="button" class="btn btn-copy" id="btnPaperAi">📋 Full paper AI prompt</button>
@@ -1944,8 +2049,23 @@ Format suitable for BBA level. Urdu/English mix explanations are fine.`;
         ${highHtml}
       `;
 
+      document.querySelectorAll('.timer-preset').forEach(btn => {
+        btn.onclick = () => {
+          const m = saveTimerMinutes(parseInt(btn.dataset.mins, 10));
+          renderToolsSection(subject);
+          showToast(`Timer set to ${formatTimerLabel(m)}`);
+        };
+      });
+      document.getElementById('btnSaveTimer').onclick = () => {
+        const h = parseInt(document.getElementById('customHrs').value, 10) || 0;
+        const m = parseInt(document.getElementById('customMins').value, 10) || 0;
+        const total = saveTimerMinutes(h * 60 + m);
+        renderToolsSection(subject);
+        showToast(`Timer set to ${formatTimerLabel(total)}`);
+      };
       document.getElementById('btnMockPaper').onclick = () => openMockPaperModal(subject);
       document.getElementById('btnTimedExam').onclick = () => openTimedExam(subject);
+      document.getElementById('btnTimerOnly').onclick = () => startTimerOnly();
       document.getElementById('btnFlashcards').onclick = () => openFlashcardsModal(subject, 'important');
       if (hasFormula) document.getElementById('btnFormula').onclick = () => openFormulaModal(subject);
       document.getElementById('btnPaperAi').onclick = () => {
